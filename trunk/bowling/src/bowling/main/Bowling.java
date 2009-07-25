@@ -11,6 +11,7 @@ import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingCapsule;
+import com.jme.math.Quaternion;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -101,8 +102,12 @@ public class Bowling extends SimplePhysicsGame {
         
         
         // Load the pines
-        for ( int i = 0; i < PIN_COUNT; i++ ) {
+        for ( int i = 0; i < 1/*PIN_COUNT*/; i++ ) {
         	this.loadModel(PIN_JME_MODEL_PATH, "pin" + i, rootNode, true);
+        	Spatial pin = rootNode.getChild("pin" + i);
+        	pin.setLocalScale(0.25f);
+        	pin.setLocalTranslation(0, 3, 0);
+        	pin.setLocalRotation(new Quaternion((float) (Math.PI / 2), 0, 0, 0));
         }
         
 //        this.loadModel(PIN_JME_MODEL_PATH, "pin0", rootNode, true);
