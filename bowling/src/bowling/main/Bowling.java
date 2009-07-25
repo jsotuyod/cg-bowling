@@ -19,7 +19,6 @@ import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.geometry.PhysicsBox;
-import com.jmex.physics.material.Material;
 import com.jmex.physics.util.SimplePhysicsGame;
 
 public class Bowling extends SimplePhysicsGame {
@@ -30,6 +29,8 @@ public class Bowling extends SimplePhysicsGame {
 	final private static String PIN_SC_MODEL_PATH = MODELS_PATH + "pin.sc";
 	final private static String PIN_JME_MODEL_PATH = MODELS_PATH + "pin.jme";
 	final private static int PIN_COUNT = 10;
+	
+	final private static float PIN_DISTANCE = 0.8f;
 	
 	private void convertModels() {
 		
@@ -67,12 +68,14 @@ public class Bowling extends SimplePhysicsGame {
         try {
 			model = (Node) importer.load(new File(path));
 			
-			// TODO : El bounding box es demasiado tosco, buscar una solucion mejor
+			// TODO : El bounding box es demasiado tosco, buscar una solucion mejor (revisar lo comentado abajo)
 			model.setModelBound(new BoundingBox());
 			model.updateModelBound();
 			
 			newNode.attachChild(model);
 			newNode.generatePhysicsGeometry();
+			
+			//newNode.generatePhysicsGeometry(true);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -99,40 +102,19 @@ public class Bowling extends SimplePhysicsGame {
         // resize it to be 10x10 thin (0.5) floor
         floorBox.getLocalScale().set( 10, 0.5f, 10 );
         
-        float scale = 1.2f;
-        float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1,5f};
-        float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
-        
-        for (int i =0; i < PIN_COUNT; i++) {
-        	x[i] /= scale;
-        	z[i] /= scale;
-        }
         // Load the pines
         for ( int i = 0; i < PIN_COUNT; i++ ) {
         	
         	this.loadModel(PIN_JME_MODEL_PATH, "pin" + i, rootNode, true);
+        	
         	DynamicPhysicsNode pin = (DynamicPhysicsNode) rootNode.getChild("pin" + i);
-        	if (i != 0) {
-        		pin.setCenterOfMass(new Vector3f(0f, 0f, -1.3f));
-        	}
-        	else {
-        		pin.setCenterOfMass(new Vector3f(0f, -50f, -1.3f));
-        	}
-        	//pin.clearDynamics();
-        	pin.setMaterial(Material.PLASTIC);
+        	
+       		pin.setCenterOfMass(new Vector3f(0f, 0f, -1.3f));
         	pin.setLocalScale(0.25f);
-        	pin.setLocalTranslation(x[i], 1.1f, z[i]);
-        	Quaternion q = new Quaternion();
-        	q.fromAngles((float) -Math.PI/2, 0, 0);
-        	pin.setLocalRotation( q );
-
         }
         
-//        this.loadModel(PIN_JME_MODEL_PATH, "pin0", rootNode, true);
-//        rootNode.getChild("pin0").getLocalTranslation().set(0, 3, 0);
-        
-        
-        // TODO : Set up scene for game
+        // Set up scene for game
+        setupScene();
         
         
         // note: we do not move the collision geometry but the physics node!
@@ -142,7 +124,22 @@ public class Bowling extends SimplePhysicsGame {
         showPhysics = true;
     }
 
-    /**
+    private void setupScene() {
+    	float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1.5f};
+        float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
+        
+        for ( int i = 0; i < PIN_COUNT; i++ ) {
+        	
+        	DynamicPhysicsNode pin = (DynamicPhysicsNode) rootNode.getChild("pin" + i);
+        	
+	        pin.setLocalTranslation(x[i] * PIN_DISTANCE, 1.08f, z[i] * PIN_DISTANCE);
+	    	Quaternion q = new Quaternion();
+	    	q.fromAngles((float) -Math.PI/2, 0, 0);
+	    	pin.setLocalRotation( q );
+        }
+	}
+
+	/**
      * The main method to allow starting this class as application.
      *
      * @param args command line arguments
