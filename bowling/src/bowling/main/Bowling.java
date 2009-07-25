@@ -10,19 +10,15 @@ import java.io.OutputStream;
 import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingCapsule;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.geometry.PhysicsBox;
-import com.jmex.physics.geometry.PhysicsMesh;
 import com.jmex.physics.material.Material;
 import com.jmex.physics.util.SimplePhysicsGame;
 
