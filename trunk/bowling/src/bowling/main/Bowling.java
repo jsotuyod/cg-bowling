@@ -23,6 +23,7 @@ import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.geometry.PhysicsBox;
 import com.jmex.physics.geometry.PhysicsMesh;
+import com.jmex.physics.material.Material;
 import com.jmex.physics.util.SimplePhysicsGame;
 
 public class Bowling extends SimplePhysicsGame {
@@ -102,17 +103,29 @@ public class Bowling extends SimplePhysicsGame {
         // resize it to be 10x10 thin (0.5) floor
         floorBox.getLocalScale().set( 10, 0.5f, 10 );
         
+        float scale = 1.2f;
         float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1,5f};
         float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
+        
+        for (int i =0; i < PIN_COUNT; i++) {
+        	x[i] /= scale;
+        	z[i] /= scale;
+        }
         // Load the pines
         for ( int i = 0; i < PIN_COUNT; i++ ) {
         	
         	this.loadModel(PIN_JME_MODEL_PATH, "pin" + i, rootNode, true);
         	DynamicPhysicsNode pin = (DynamicPhysicsNode) rootNode.getChild("pin" + i);
-        	pin.setCenterOfMass(new Vector3f(-1.7f, 0.8f, -1.0f));
-        	pin.clearDynamics();
+        	if (i != 0) {
+        		pin.setCenterOfMass(new Vector3f(0f, 0f, -1.3f));
+        	}
+        	else {
+        		pin.setCenterOfMass(new Vector3f(0f, -50f, -1.3f));
+        	}
+        	//pin.clearDynamics();
+        	pin.setMaterial(Material.PLASTIC);
         	pin.setLocalScale(0.25f);
-        	pin.setLocalTranslation(x[i], 2, z[i]);
+        	pin.setLocalTranslation(x[i], 1.1f, z[i]);
         	Quaternion q = new Quaternion();
         	q.fromAngles((float) -Math.PI/2, 0, 0);
         	pin.setLocalRotation( q );
