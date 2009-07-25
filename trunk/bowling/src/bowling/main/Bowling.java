@@ -12,11 +12,13 @@ import bowling.utils.ScToJme;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingCapsule;
 import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.binary.BinaryImporter;
+import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.geometry.PhysicsBox;
@@ -100,14 +102,21 @@ public class Bowling extends SimplePhysicsGame {
         // resize it to be 10x10 thin (0.5) floor
         floorBox.getLocalScale().set( 10, 0.5f, 10 );
         
-        
+        float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1,5f};
+        float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
         // Load the pines
-        for ( int i = 0; i < 1/*PIN_COUNT*/; i++ ) {
+        for ( int i = 0; i < PIN_COUNT; i++ ) {
+        	
         	this.loadModel(PIN_JME_MODEL_PATH, "pin" + i, rootNode, true);
-        	Spatial pin = rootNode.getChild("pin" + i);
+        	DynamicPhysicsNode pin = (DynamicPhysicsNode) rootNode.getChild("pin" + i);
+        	pin.setCenterOfMass(new Vector3f(-1.7f, 0.8f, -1.0f));
+        	pin.clearDynamics();
         	pin.setLocalScale(0.25f);
-        	pin.setLocalTranslation(0, 3, 0);
-        	pin.setLocalRotation(new Quaternion((float) (Math.PI / 2), 0, 0, 0));
+        	pin.setLocalTranslation(x[i], 2, z[i]);
+        	Quaternion q = new Quaternion();
+        	q.fromAngles((float) -Math.PI/2, 0, 0);
+        	pin.setLocalRotation( q );
+
         }
         
 //        this.loadModel(PIN_JME_MODEL_PATH, "pin0", rootNode, true);
