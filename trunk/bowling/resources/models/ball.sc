@@ -1,23 +1,6 @@
 
 
 object {
-	shader "Floor.shader"
-	type generic-mesh
-	name "Mesh.003"
-	points 4
-		-28.791374 -23.859930 -2.493933
-		29.075813 -23.859930 -2.493933
-		29.075813 23.037174 -2.493933
-		-28.791374 23.037174 -2.493933
-	triangles 2
-		3 0 1
-		3 1 2
-	normals none
-	uvs none
-}
-
-
-object {
 	shader "Text.shader"
 	type generic-mesh
 	name "Mesh.002"
