@@ -1,5 +1,5 @@
 
-
+/*
 object {
 	shader "Text.shader"
 	type generic-mesh
@@ -3736,7 +3736,7 @@ object {
 	uvs none
 }
 
-
+*/
 object {
 	shader "Black.shader"
 	type generic-mesh
