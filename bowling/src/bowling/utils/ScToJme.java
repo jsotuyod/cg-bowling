@@ -9,11 +9,13 @@ import java.nio.IntBuffer;
 import bowling.utils.Parser.ParserException;
 import cg.math.Matrix4;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Box;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.model.converters.FormatConverter;
@@ -82,11 +84,37 @@ public class ScToJme extends FormatConverter {
         
         if (type.equals("generic-mesh")) {
         	return parseGenericMesh(name, p, transform);
+        } else if (type.equals("box")){
+        	return parseBox(name, p, transform);
         } else {
         	return null;
         }
 	}
 	
+	private Spatial parseBox(String name, Parser p, Matrix4 transform) {
+		if(debug) {
+    		System.out.println("Reading box... ");
+    	}
+		
+		Vector3f center = transform.transform(new Vector3f(0, 0, 0));
+		Vector3f x = transform.transform(new Vector3f(1, 0, 0)).subtractLocal(center);
+		Vector3f y = transform.transform(new Vector3f(0, 1, 0)).subtractLocal(center);
+		Vector3f z = transform.transform(new Vector3f(0, 0, 1)).subtractLocal(center);
+		
+		Box box = new Box(name, center, x.length(), y.length(), z.length());
+		
+		x.normalizeLocal();
+		y.normalizeLocal();
+		z.normalizeLocal();
+		
+		// Apply rotation in each axis
+		Quaternion q = new Quaternion();
+		q.fromAngles(x.angleBetween(new Vector3f(1, 0, 0)), y.angleBetween(new Vector3f(0, 1, 0)), z.angleBetween(new Vector3f(0, 0, 1)));
+		box.setLocalRotation(q);
+		
+		return box;
+	}
+
 	private Spatial parseGenericMesh(String name, Parser p, Matrix4 transform) throws ParserException, IOException {
     	if(debug) {
     		System.out.println("Reading generic mesh... ");
