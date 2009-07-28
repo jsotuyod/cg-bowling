@@ -32,7 +32,6 @@ import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.contact.MutableContactInfo;
-import com.jmex.physics.geometry.PhysicsBox;
 import com.jmex.physics.material.Material;
 import com.jmex.physics.util.SimplePhysicsGame;
 
@@ -40,8 +39,7 @@ public class Bowling extends SimplePhysicsGame {
 
 	private DynamicPhysicsNode ball;
 	private List<DynamicPhysicsNode> pins;
-	//TODO: hacer una clase BowlingLine que contenga todo esto
-	private PhysicsBox lineFloor, rightGutter, leftGutter, backGutter, rightWall, leftWall, backWall;
+	
 	private int forceMagnitude;
 	
 	final private static String RESOURCE_PATH = "resources" + File.separatorChar;
@@ -52,6 +50,10 @@ public class Bowling extends SimplePhysicsGame {
 	
 	final private static String BALL_SC_MODEL_PATH = MODELS_PATH + "ball.sc";
 	final private static String BALL_JME_MODEL_PATH = MODELS_PATH + "ball.jme";
+	
+	final private static String LINE_SC_MODEL_PATH = MODELS_PATH + "line.sc";
+	final private static String LINE_JME_MODEL_PATH = MODELS_PATH + "line.jme";
+	
 	final private static int PIN_COUNT = 10;
 	
 	final private static float PIN_DISTANCE = 1.3f;
@@ -69,6 +71,10 @@ public class Bowling extends SimplePhysicsGame {
 			
 			in = new FileInputStream(new File(BALL_SC_MODEL_PATH));
 			out = new FileOutputStream(new File(BALL_JME_MODEL_PATH));
+			converter.convert(in, out);
+			
+			in = new FileInputStream(new File(LINE_SC_MODEL_PATH));
+			out = new FileOutputStream(new File(LINE_JME_MODEL_PATH));
 			converter.convert(in, out);
 			
 		} catch (IOException e) {
@@ -101,18 +107,16 @@ public class Bowling extends SimplePhysicsGame {
 	protected void simpleInitGame() {
 		this.convertModels();
 		
-		// TODO : Replace this for actual loading of the models
-		
 		// Position camera
-		setupCamera();
+		this.setupCamera();
 		
         // Create Needed objects
-        createLine();
-        createPins();
-        createBowlingBall();
+		this.createLine();
+		this.createPins();
+		this.createBowlingBall();
         
         // Set up scene for game
-        setupScene();
+		this.setupScene();
         
         input.addAction( new ApplyForceAction(), InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
         input.addAction( new SetForceAction(), InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_F, InputHandler.AXIS_NONE, true );
@@ -163,15 +167,16 @@ public class Bowling extends SimplePhysicsGame {
     	StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
         rootNode.attachChild( staticNode );
 
-        this.lineFloor = staticNode.createBox( "floor");
-
-        this.leftGutter = staticNode.createBox( "leftGutter" ); 
-        this.rightGutter = staticNode.createBox( "rightGutter" ); 
-        this.backGutter = staticNode.createBox( "backGutter" ); 
-        
-        this.leftWall = staticNode.createBox( "leftWall" ); 
-        this.rightWall = staticNode.createBox( "rightWall" ); 
-        this.backWall = staticNode.createBox( "backWall" ); 
+        this.loadModel(LINE_JME_MODEL_PATH, staticNode, true);
+//        this.lineFloor = staticNode.createBox( "floor");
+//
+//        this.leftGutter = staticNode.createBox( "leftGutter" ); 
+//        this.rightGutter = staticNode.createBox( "rightGutter" ); 
+//        this.backGutter = staticNode.createBox( "backGutter" ); 
+//        
+//        this.leftWall = staticNode.createBox( "leftWall" ); 
+//        this.rightWall = staticNode.createBox( "rightWall" ); 
+//        this.backWall = staticNode.createBox( "backWall" ); 
 	}
 
 	private void createPins() {
@@ -230,31 +235,8 @@ public class Bowling extends SimplePhysicsGame {
 	}
     
     private void setupScene() {
-    	setupLine();
     	setupPins();
     	setupBowlingBall();
-	}
-    
-    private void setupLine() {
-    	this.lineFloor.getLocalScale().set( 5, 1f, 70 ); //TODO: ver que material le damos al piso
-
-    	this.leftGutter.getLocalScale().set( 2, 0.6f, 70 );
-    	this.leftGutter.setLocalTranslation(3.5f, -0.2f, 0);
-
-    	this.rightGutter.getLocalScale().set( 2, 0.6f, 70 );
-    	this.rightGutter.setLocalTranslation(-3.5f, -0.2f, 0);
-
-    	this.backGutter.getLocalScale().set( 9, 0.4f, 5f );
-    	this.backGutter.setLocalTranslation(0f, -0.25f, 37.5f);
-
-    	this.leftWall.getLocalScale().set(2f, 2f, 75f );
-    	this.leftWall.setLocalTranslation(5.5f, 0.5f, 2.5f);
-
-    	this.rightWall.getLocalScale().set(2f, 2f, 75f );
-    	this.rightWall.setLocalTranslation(-5.5f, 0.5f, 2.5f);
-
-    	this.backWall.getLocalScale().set(13f, 4f, 2f );
-    	this.backWall.setLocalTranslation(0f, 1.5f, 41f);
 	}
 
 	private void setupPins(){
