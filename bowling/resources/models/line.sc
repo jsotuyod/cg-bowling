@@ -1,9 +1,9 @@
 
 object {
 	transform {
-		scalex 2.5
-		scaley 0.5
-		scalez 35
+		scalex 5
+		scaley 1
+		scalez 70
 	}
 	shader "LineFloor.shader"
 	type box
@@ -13,9 +13,9 @@ object {
 
 object {
 	transform {
-		scalex 1
-		scaley 0.3
-		scalez 35
+		scalex 2
+		scaley 0.6
+		scalez 70
 		translate 3.5 -0.2 0
 	}
 	shader "Gutter.shader"
@@ -26,9 +26,9 @@ object {
 
 object {
 	transform {
-		scalex 1
-		scaley 0.3
-		scalez 35
+		scalex 2
+		scaley 0.6
+		scalez 70
 		translate -3.5 -0.2 0
 	}
 	shader "Gutter.shader"
@@ -38,9 +38,9 @@ object {
 
 object {
 	transform {
-		scalex 4.5
-		scaley 0.2
-		scalez 2.5
+		scalex 9
+		scaley 0.4
+		scalez 5
 		translate 0 -0.25 37.5
 	}
 	shader "Gutter.shader"
@@ -50,9 +50,9 @@ object {
 
 object {
 	transform {
-		scalex 1
-		scaley 1
-		scalez 37.5
+		scalex 2
+		scaley 2
+		scalez 75
 		translate 5.5 0.5 2.5
 	}
 	shader "Wall.shader"
@@ -62,9 +62,9 @@ object {
 
 object {
 	transform {
-		scalex 1
-		scaley 1
-		scalez 37.5
+		scalex 2
+		scaley 2
+		scalez 75
 		translate -5.5 0.5 2.5
 	}
 	shader "Gutter.shader"
@@ -74,9 +74,9 @@ object {
 
 object {
 	transform {
-		scalex 6.5
-		scaley 2
-		scalez 2
+		scalex 13
+		scaley 4
+		scalez 4
 		translate 0 1.5 41
 	}
 	shader "Gutter.shader"

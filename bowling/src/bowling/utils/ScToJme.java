@@ -97,9 +97,9 @@ public class ScToJme extends FormatConverter {
     	}
 		
 		Vector3f center = transform.transform(new Vector3f(0, 0, 0));
-		Vector3f x = transform.transform(new Vector3f(1, 0, 0)).subtractLocal(center);
-		Vector3f y = transform.transform(new Vector3f(0, 1, 0)).subtractLocal(center);
-		Vector3f z = transform.transform(new Vector3f(0, 0, 1)).subtractLocal(center);
+		Vector3f x = transform.transform(new Vector3f(0.5f, 0, 0)).subtractLocal(center);
+		Vector3f y = transform.transform(new Vector3f(0, 0.5f, 0)).subtractLocal(center);
+		Vector3f z = transform.transform(new Vector3f(0, 0, 0.5f)).subtractLocal(center);
 		
 		Box box = new Box(name, center, x.length(), y.length(), z.length());
 		
