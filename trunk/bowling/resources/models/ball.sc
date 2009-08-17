@@ -1,4 +1,28 @@
 
+shader {
+	name "Black.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.000 0.000 0.000 }
+}
+
+shader {
+	name "BowlingBall.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.020 0.027 0.169 }
+}
+
+shader {
+	name "Floor.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.349 0.282 0.200 }
+}
+
+shader {
+	name "Text.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.784 0.784 0.784 }
+}
+
 /*
 object {
 	shader "Text.shader"

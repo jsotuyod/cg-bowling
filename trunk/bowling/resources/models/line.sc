@@ -1,4 +1,22 @@
 
+shader {
+	name "LineFloor.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.000 0.000 1.000 }
+}
+
+shader {
+	name "Gutter.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.200 0.200 0.200 }
+}
+
+shader {
+	name "Wall.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.000 0.000 1.000 }
+}
+
 object {
 	transform {
 		scalex 5
@@ -67,7 +85,7 @@ object {
 		scalez 75
 		translate -5.5 0.5 2.5
 	}
-	shader "Gutter.shader"
+	shader "Wall.shader"
 	type box
 	name "rightWall"
 }

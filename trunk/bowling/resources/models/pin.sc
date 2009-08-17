@@ -1,4 +1,15 @@
 
+shader {
+	name "BowlingPinRedStripe.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.502 0.000 0.000 }
+}
+
+shader {
+	name "BowlingPinWhite.shader"
+	type diffuse
+	diff { "sRGB nonlinear" 0.902 0.902 0.902 }
+}
 
 object {
 	shader "BowlingPinWhite.shader"
