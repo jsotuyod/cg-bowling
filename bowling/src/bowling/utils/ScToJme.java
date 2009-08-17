@@ -5,9 +5,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import bowling.utils.Parser.ParserException;
+import bowling.utils.sc.DiffuseShader;
+import bowling.utils.sc.Shader;
 import cg.math.Matrix4;
+import cg.utils.Color;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -23,11 +28,13 @@ import com.jmex.model.converters.FormatConverter;
 public class ScToJme extends FormatConverter {
 
 	private boolean debug = true;
+	private Map<String, Shader> shadersMap;
 	
 	@Override
 	public void convert(InputStream format, OutputStream format2)
 			throws IOException {
 		
+		shadersMap = new HashMap<String, Shader>();
 		Parser parser = new Parser(format);
 
 		BinaryExporter.getInstance().save(parseFile(parser),format2);
@@ -46,7 +53,9 @@ public class ScToJme extends FormatConverter {
 			}
 			
 			try {
-				if (token.equals("object")) {
+				if (token.equals("shader")) {
+                    parseShader(p);
+                } else if (token.equals("object")) {
 					node.attachChild(parseObjectBlock(p));
 				}
 				
@@ -56,16 +65,46 @@ public class ScToJme extends FormatConverter {
 			} catch (ParserException e) {
 				e.printStackTrace();
 				return null;
+	        } catch (UnsupportedShaderException e) {
+				e.printStackTrace();
+				return null;
 	        }
 		}
 		
 		return node;
 	}
 
+	private void parseShader(Parser p) throws IOException, ParserException, UnsupportedShaderException {
+		
+		p.checkNextToken("{");
+        p.checkNextToken("name");
+        String name = p.getNextToken();
+        Shader shader;
+        
+        if ( debug ) {
+        	System.out.println("Reading shader: " + name + " ...");
+        }
+        
+        p.checkNextToken("type");
+        String type = p.getNextToken();
+        
+        if (type.equals("diffuse")) {
+        	if (p.peekNextToken("diff")) {
+	            shader = new DiffuseShader(name, parseColor(p));
+	            shadersMap.put(name, shader);
+        	} else {
+        		throw new UnsupportedShaderException("Unsupported shader type found: " + type);
+        	}
+        } else {
+        	throw new UnsupportedShaderException("Unsupported shader type found: " + type);
+        }
+	}
+	
 	private Spatial parseObjectBlock(Parser p) throws IOException, ParserException {
 		p.checkNextToken("{");
         Matrix4 transform = null;
         String name = null;
+        Spatial ret = null;
         
         if (p.peekNextToken("transform")) {
             transform = parseMatrix(p);
@@ -73,7 +112,7 @@ public class ScToJme extends FormatConverter {
         
         // Discard shader
         p.checkNextToken("shader");
-        p.getNextToken();
+        String shader = p.getNextToken();
         
         p.checkNextToken("type");
         String type = p.getNextToken();
@@ -83,13 +122,21 @@ public class ScToJme extends FormatConverter {
         }
         
         if (type.equals("generic-mesh")) {
-        	return parseGenericMesh(name, p, transform);
+        	ret = parseGenericMesh(name, p, transform);
         } else if (type.equals("box")){
-        	return parseBox(name, p, transform);
+        	ret = parseBox(name, p, transform);
         } else {
-        	return null;
+        	ret = null;
         }
+        
+        if (ret != null) {
+        	shadersMap.get(shader).apply(ret);
+        }
+        
+        return ret;
 	}
+	
+	
 	
 	private Spatial parseBox(String name, Parser p, Matrix4 transform) {
 		if(debug) {
@@ -143,15 +190,33 @@ public class ScToJme extends FormatConverter {
         	normalsVertex = parseFloatArray(p, np * 3);
         	
         	// TODO : cada 3 son un vector
-        }
-        else if (p.peekNextToken("facevarying")){
+        } else if (p.peekNextToken("facevarying")){
         	// TODO : Facevarying is unsupported
-        }
-        else {
+        } else {
             p.checkNextToken("none");
             
-            // FIXME : Todas en cero - PARCHE!!
             normalsVertex = new float[np * 3];
+            
+            // Area weighted mean of face normals
+            for (int i = 0; i < np * 3; i += 3) {
+            	int j;
+            	Vector3f n = new Vector3f();
+            	Vector3f v1 = null, v2 = null;
+            	for (j = 0; j < nt * 3; j += 3) {
+            		if (i == indices[j] || i == indices[j+1] || i == indices[j+2]) {
+            			v1 = new Vector3f(points[indices[j]]).subtractLocal(points[indices[j+1]]);
+            			v2 = new Vector3f(points[indices[j]]).subtractLocal(points[indices[j+2]]);
+            			
+            			n.addLocal(v1.crossLocal(v2));
+            		}
+            	}
+            	
+            	n.normalizeLocal();
+            	
+            	normalsVertex[i] = n.x;
+            	normalsVertex[i+1] = n.y;
+            	normalsVertex[i+2] = n.z;
+            }
         }
         
         // parse texture coordinates
@@ -250,5 +315,52 @@ public class ScToJme extends FormatConverter {
         for (int i = 0; i < size; i++)
             data[i] = p.getNextInt();
         return data;
+    }
+    
+    private Color parseColor(Parser p) throws IOException, ParserException {
+    	float r,g,b;
+    	String space;
+    	
+        if (p.peekNextToken("{")) {
+            space = p.getNextToken();
+            Color c = null;
+            if (space.equals("sRGB nonlinear")) {
+                r = p.getNextFloat();
+                g = p.getNextFloat();
+                b = p.getNextFloat();
+                c = new Color(r, g, b);
+                
+                c.toLinear();
+            } else if (space.equals("sRGB linear")) {
+                r = p.getNextFloat();
+                g = p.getNextFloat();
+                b = p.getNextFloat();
+                c = new Color(r, g, b);
+            } else
+            	System.err.println("Unrecognized color space: " + space);
+
+            p.checkNextToken("}");
+            return c;
+        } else {
+            r = p.getNextFloat();
+            g = p.getNextFloat();
+            b = p.getNextFloat();
+            return new Color(r, g, b);
+        }
+    }
+    
+    /**
+     * Exception thrown when an unsupported shader is defined.
+     * @author jsotuyod
+     *
+     */
+    class UnsupportedShaderException extends Exception {
+    	
+    	private static final long serialVersionUID = 1L;
+    	
+		public UnsupportedShaderException(String string) {
+			super(string);
+		}
+    	
     }
 }
