@@ -77,7 +77,6 @@ public class MainMenu extends BasicGameState {
 	protected void initInput() {
 		input = new MenuInputHandler(this);
 
-        DisplaySystem display = DisplaySystem.getDisplaySystem();
         mouse = new AbsoluteMouse("Mouse Input", display.getWidth(),
                 display.getHeight());
         mouse.registerWithInputHandler( input );
