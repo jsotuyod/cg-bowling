@@ -106,7 +106,7 @@ public class Bowling extends SimplePhysicsGame {
 		
 		this.setUpMainMenu();
 		
-		// TODO : add other game states to the managaer
+		// TODO : add other game states to the manager
 		
 		// TODO : Move everything to the play game state
 		// Position camera
