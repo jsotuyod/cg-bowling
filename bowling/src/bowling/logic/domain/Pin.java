@@ -32,7 +32,7 @@ public class Pin {
 	}
 	
 	public void reset() {
-		this.node.setLocalTranslation(originalPos);
+		this.node.setLocalTranslation(originalPos.clone());
 		
 		Quaternion q = new Quaternion();
 		q.fromAngles((float) -Math.PI/2, 0, 0);
@@ -40,17 +40,9 @@ public class Pin {
 	}
 	
 	public boolean isFallen() {
-		float[] angles = node.getLocalRotation().toAngles(null);
-		
-		if (Math.abs(angles[0] + Math.PI / 2) > Math.PI / 6) {
+		if (node.getLocalTranslation().y < originalPos.y - 0.01f) {
 			return true;
 		}
-		
-		if (Math.abs(angles[2]) > Math.PI / 6) {
-			return true;
-		}
-		
-		// TODO : Considerar que puede estar "parado" mientras cae al vacio o en la caja del fondo....
 		
 		return false;
 	}

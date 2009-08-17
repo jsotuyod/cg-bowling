@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bowling.input.InputHandler;
+import bowling.logic.domain.Ball;
 import bowling.logic.domain.Pin;
 import bowling.menu.MainMenu;
 import bowling.utils.ScToJme;
@@ -31,7 +32,7 @@ import com.jmex.physics.util.SimplePhysicsGame;
 
 public class Bowling extends SimplePhysicsGame {
 
-	private DynamicPhysicsNode ball;
+	private Ball ball;
 	private List<Pin> pins;
 	
 	private InputHandler inputHandler;
@@ -140,7 +141,7 @@ public class Bowling extends SimplePhysicsGame {
 
 	private void setupInputHandler() {
 		this.inputHandler = new InputHandler(input);
-		this.inputHandler.setUp(this.ball);
+		this.inputHandler.setUp(this.ball.getNode());
 	}
 
 	private void createLine() {
@@ -186,21 +187,24 @@ public class Bowling extends SimplePhysicsGame {
 		}
 		
     	// Create the node
-    	this.ball = getPhysicsSpace().createDynamicNode();
-        this.ball.setName("ball");
-        rootNode.attachChild(this.ball);
+		DynamicPhysicsNode ball;
+    	ball = getPhysicsSpace().createDynamicNode();
+        ball.setName("ball");
+        rootNode.attachChild(ball);
         
         // Set the physic properties
         final Sphere sphere = new Sphere("ball-geom", 100, 100, 5f);
-        this.ball.attachChild(sphere);
-        this.ball.setLocalScale(0.1f);
+        ball.attachChild(sphere);
+        ball.setLocalScale(0.1f);
         
-        this.ball.generatePhysicsGeometry();
-        this.ball.setMaterial(createMaterial("ball", 20f, 0.05f, 0f));
-        this.ball.computeMass();
+        ball.generatePhysicsGeometry();
+        ball.setMaterial(createMaterial("ball", 20f, 0.05f, 0f));
+        ball.computeMass();
         
         // Add the model, with no physics, to make it look nice
         this.loadModel(BALL_JME_MODEL_PATH, ball, false);
+        
+        this.ball = new Ball(ball, new Vector3f(0f, 1f, -32f));
 	}
 
 	private void setupCamera() {
@@ -223,7 +227,7 @@ public class Bowling extends SimplePhysicsGame {
     }
 
 	private void setupBowlingBall() {
-		this.ball.setLocalTranslation(0f, 1f, -32f);
+		this.ball.reset();
 	}
     
     private Material createMaterial(String name, float density, float mu, float bounce) {
