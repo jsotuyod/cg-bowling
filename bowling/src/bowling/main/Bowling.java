@@ -42,8 +42,8 @@ public class Bowling extends SimplePhysicsGame {
 	final private static String BALL_SC_MODEL_PATH = MODELS_PATH + "ball.sc";
 	final private static String BALL_JME_MODEL_PATH = MODELS_PATH + "ball.jme";
 	
-	final private static String LINE_SC_MODEL_PATH = MODELS_PATH + "line.sc";
-	final private static String LINE_JME_MODEL_PATH = MODELS_PATH + "line.jme";
+	final private static String LANE_SC_MODEL_PATH = MODELS_PATH + "lane.sc";
+	final private static String LANE_JME_MODEL_PATH = MODELS_PATH + "lane.jme";
 	
 	final private static int PIN_COUNT = 10;
 	
@@ -63,8 +63,8 @@ public class Bowling extends SimplePhysicsGame {
 			out = new FileOutputStream(new File(BALL_JME_MODEL_PATH));
 			converter.convert(in, out);
 			
-			in = new FileInputStream(new File(LINE_SC_MODEL_PATH));
-			out = new FileOutputStream(new File(LINE_JME_MODEL_PATH));
+			in = new FileInputStream(new File(LANE_SC_MODEL_PATH));
+			out = new FileOutputStream(new File(LANE_JME_MODEL_PATH));
 			converter.convert(in, out);
 			
 		} catch (IOException e) {
@@ -124,7 +124,7 @@ public class Bowling extends SimplePhysicsGame {
     	StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
         rootNode.attachChild( staticNode );
 
-        this.loadModel(LINE_JME_MODEL_PATH, staticNode, true);
+        this.loadModel(LANE_JME_MODEL_PATH, staticNode, true);
 	}
 
 	private void createPins() {
