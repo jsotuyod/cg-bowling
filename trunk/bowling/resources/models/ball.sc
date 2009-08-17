@@ -8,7 +8,7 @@ shader {
 shader {
 	name "BowlingBall.shader"
 	type diffuse
-	diff { "sRGB nonlinear" 0.020 0.027 0.169 }
+	diff { "sRGB nonlinear" 0.768 0.294 0.764 }
 }
 
 shader {
@@ -23,7 +23,7 @@ shader {
 	diff { "sRGB nonlinear" 0.784 0.784 0.784 }
 }
 
-/*
+
 object {
 	shader "Text.shader"
 	type generic-mesh
@@ -3760,7 +3760,7 @@ object {
 	uvs none
 }
 
-*/
+
 object {
 	shader "Black.shader"
 	type generic-mesh

@@ -9,23 +9,14 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import bowling.input.InputHandler;
 import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.input.InputHandler;
-import com.jme.input.KeyInput;
-import com.jme.input.action.InputAction;
-import com.jme.input.action.InputActionEvent;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.Text;
 import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.BlendState;
-import com.jme.scene.state.MaterialState;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.physics.DynamicPhysicsNode;
@@ -40,7 +31,7 @@ public class Bowling extends SimplePhysicsGame {
 	private DynamicPhysicsNode ball;
 	private List<DynamicPhysicsNode> pins;
 	
-	private int forceMagnitude;
+	private InputHandler inputHandler;
 	
 	final private static String RESOURCE_PATH = "resources" + File.separatorChar;
 	final private static String MODELS_PATH = RESOURCE_PATH + "models" + File.separatorChar;
@@ -64,7 +55,6 @@ public class Bowling extends SimplePhysicsGame {
 		ScToJme converter = new ScToJme();
 		
 		try {
-			// TODO : Convert all sc files to jme
 			InputStream in = new FileInputStream(new File(PIN_SC_MODEL_PATH));
 			OutputStream out = new FileOutputStream(new File(PIN_JME_MODEL_PATH));
 			converter.convert(in, out);
@@ -118,65 +108,23 @@ public class Bowling extends SimplePhysicsGame {
         // Set up scene for game
 		this.setupScene();
         
-        input.addAction( new ApplyForceAction(), InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
-        input.addAction( new SetForceAction(), InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_F, InputHandler.AXIS_NONE, true );
+		this.setupInputHandler();
         
-        Text label = Text.createDefaultTextLabel( "instructions", "[f] to increase force. [space bar] to throw the ball." );
-        label.setLocalTranslation( 0, 20, 0 );
-        statNode.attachChild( label );
-        
+		statNode.attachChild( this.inputHandler.getInstructions() );
+		
         showPhysics = true;
     }
-
-	//TODO: sacar esta clase afuera, meterla en un package aparte
-	private class ApplyForceAction extends InputAction {
-
-        public ApplyForceAction() {
-        }
-
-        public void performAction( InputActionEvent evt ) {
-            if ( evt.getTriggerPressed() ) {
-                // key goes down - apply motion
-            	Bowling.this.ball.addForce( new Vector3f(0, 0, Bowling.this.forceMagnitude) );
-            	
-            	Text label = Text.createDefaultTextLabel( "force", "Force applied: " + Bowling.this.forceMagnitude );
-                label.setLocalTranslation( 0, 5, 0 );
-                statNode.attachChild( label );
-            }
-        }
-    }
 	
-	//TODO: sacar esta clase afuera, meterla en un package aparte	
-	private class SetForceAction extends InputAction {
-		private static final int FORCE_STEP = 50;
-		private static final int FORCE_MIN = 0;
-		private static final int FORCE_MAX = 20000;
+    private void setupInputHandler() {
+		this.inputHandler = new InputHandler(input);
+		this.inputHandler.setUp(this.ball);
+	}
 
-		public SetForceAction( ) {
-			Bowling.this.forceMagnitude = FORCE_MIN;
-        }
-
-        public void performAction( InputActionEvent evt ) {
-            if ( evt.getTriggerAllowsRepeats() && Bowling.this.forceMagnitude < FORCE_MAX) {
-            	Bowling.this.forceMagnitude += FORCE_STEP;
-            }
-        }
-	}	
-	
-    private void createLine() {
+	private void createLine() {
     	StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
         rootNode.attachChild( staticNode );
 
         this.loadModel(LINE_JME_MODEL_PATH, staticNode, true);
-//        this.lineFloor = staticNode.createBox( "floor");
-//
-//        this.leftGutter = staticNode.createBox( "leftGutter" ); 
-//        this.rightGutter = staticNode.createBox( "rightGutter" ); 
-//        this.backGutter = staticNode.createBox( "backGutter" ); 
-//        
-//        this.leftWall = staticNode.createBox( "leftWall" ); 
-//        this.rightWall = staticNode.createBox( "rightWall" ); 
-//        this.backWall = staticNode.createBox( "backWall" ); 
 	}
 
 	private void createPins() {
@@ -217,7 +165,6 @@ public class Bowling extends SimplePhysicsGame {
         
         // Set the physic properties
         final Sphere sphere = new Sphere("ball-geom", 100, 100, 5f);
-        color(sphere, ColorRGBA.blue);
         this.ball.attachChild(sphere);
         this.ball.setLocalScale(0.1f);
         
@@ -231,7 +178,7 @@ public class Bowling extends SimplePhysicsGame {
 
 	private void setupCamera() {
     	cam.setLocation(new Vector3f (10f, 20f, -70f));
-        cam.lookAt(new Vector3f(0f, 1.5f, 41f), new Vector3f (0, 1, 0)); //0, 1.5, -3
+        cam.lookAt(new Vector3f(0f, 1.5f, 41f), new Vector3f (0, 1, 0));
 	}
     
     private void setupScene() {
@@ -258,21 +205,6 @@ public class Bowling extends SimplePhysicsGame {
 	private void setupBowlingBall() {
 		this.ball.setLocalTranslation(0f, 1f, -32f);
 	}
-
-    private void color( Spatial spatial, ColorRGBA color ) {
-        final MaterialState materialState = display.getRenderer().createMaterialState();
-        materialState.setDiffuse( color );
-        if ( color.a < 1 ) {
-            final BlendState blendState = display.getRenderer().createBlendState();
-            blendState.setEnabled( true );
-            blendState.setBlendEnabled( true );
-            blendState.setSourceFunction( BlendState.SourceFunction.SourceAlpha );
-            blendState.setDestinationFunction( BlendState.DestinationFunction.OneMinusSourceAlpha );
-            spatial.setRenderState( blendState );
-            spatial.setRenderQueueMode( Renderer.QUEUE_TRANSPARENT );
-        }
-        spatial.setRenderState( materialState );
-    }
     
     private Material createMaterial(String name, float density, float mu, float bounce) {
     	Material ballMaterial = new Material(name);

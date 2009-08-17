@@ -188,8 +188,6 @@ public class ScToJme extends FormatConverter {
         p.checkNextToken("normals");
         if (p.peekNextToken("vertex")){
         	normalsVertex = parseFloatArray(p, np * 3);
-        	
-        	// TODO : cada 3 son un vector
         } else if (p.peekNextToken("facevarying")){
         	// TODO : Facevarying is unsupported
         } else {
