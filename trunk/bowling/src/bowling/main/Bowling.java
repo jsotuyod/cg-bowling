@@ -10,15 +10,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bowling.input.InputHandler;
+import bowling.logic.domain.Pin;
+import bowling.menu.MainMenu;
 import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Sphere;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.binary.BinaryImporter;
+import com.jmex.game.state.GameState;
+import com.jmex.game.state.GameStateManager;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.PhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
@@ -29,7 +32,7 @@ import com.jmex.physics.util.SimplePhysicsGame;
 public class Bowling extends SimplePhysicsGame {
 
 	private DynamicPhysicsNode ball;
-	private List<DynamicPhysicsNode> pins;
+	private List<Pin> pins;
 	
 	private InputHandler inputHandler;
 	
@@ -95,8 +98,16 @@ public class Bowling extends SimplePhysicsGame {
 	}
 	
 	protected void simpleInitGame() {
+		// Creates the GameStateManager. Only needs to be called once.
+		GameStateManager.create();
+		
 		this.convertModels();
 		
+		this.setUpMainMenu();
+		
+		// TODO : add other game states to the managaer
+		
+		// TODO : Move everything to the play game state
 		// Position camera
 		this.setupCamera();
 		
@@ -114,8 +125,20 @@ public class Bowling extends SimplePhysicsGame {
 		
         showPhysics = true;
     }
+
+	@Override
+	protected void preRender() {
+		GameStateManager.getInstance().update(tpf);
+		GameStateManager.getInstance().render(tpf);
+    }
 	
-    private void setupInputHandler() {
+    private void setUpMainMenu() {
+		GameState menu = new MainMenu();
+		menu.setActive(true);
+		GameStateManager.getInstance().attachChild(menu);
+	}
+
+	private void setupInputHandler() {
 		this.inputHandler = new InputHandler(input);
 		this.inputHandler.setUp(this.ball);
 	}
@@ -133,8 +156,11 @@ public class Bowling extends SimplePhysicsGame {
     		return;
     	}
     	
-    	this.pins = new LinkedList<DynamicPhysicsNode>();
+    	this.pins = new LinkedList<Pin>();
     	
+    	float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1.5f};
+    	float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
+    		
     	// Create the pins
         for ( int i = 0; i < PIN_COUNT; i++ ) {
         	
@@ -148,7 +174,8 @@ public class Bowling extends SimplePhysicsGame {
         	pin.setMaterial(Material.WOOD);
         	pin.computeMass();
         	
-        	this.pins.add(pin);
+        	Vector3f originalPos = new Vector3f(x[i] * PIN_DISTANCE, 1.32f, z[i] * PIN_DISTANCE + PIN_OFFSET);
+        	this.pins.add(new Pin(pin, originalPos));
         }
 	}
 
@@ -187,18 +214,11 @@ public class Bowling extends SimplePhysicsGame {
 	}
 
 	private void setupPins(){
-    	float x[] = {0, -0.5f, 0.5f, -1f, 0, 1f, -1.5f, -0.5f, 0.5f, 1.5f};
-    	float z[] = {0, 1f, 1f, 2f, 2f, 2f, 3f, 3f, 3f, 3f};
 
-    	//TODO: tener en cuenta cuando caen los pinos, no se crean/colocan todos
     	for ( int i = 0; i < PIN_COUNT; i++ ) {
     		
-    		DynamicPhysicsNode pin = this.pins.get(i);
-    		
-    		pin.setLocalTranslation(x[i] * PIN_DISTANCE, 1.32f, z[i] * PIN_DISTANCE + PIN_OFFSET);
-    		Quaternion q = new Quaternion();
-    		q.fromAngles((float) -Math.PI/2, 0, 0);
-    		pin.setLocalRotation(q);
+    		Pin pin = this.pins.get(i);
+    		pin.place();
     	}
     }
 
@@ -216,7 +236,7 @@ public class Bowling extends SimplePhysicsGame {
 
     	return ballMaterial;
     }
-
+    
     /**
      * The main method to allow starting this class as application.
      *

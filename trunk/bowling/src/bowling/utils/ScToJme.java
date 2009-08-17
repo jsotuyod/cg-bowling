@@ -14,7 +14,6 @@ import bowling.utils.sc.Shader;
 import cg.math.Matrix4;
 import cg.utils.Color;
 
-import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
