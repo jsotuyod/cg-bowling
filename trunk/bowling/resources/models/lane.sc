@@ -2,7 +2,7 @@
 shader {
 	name "LineFloor.shader"
 	type diffuse
-	diff { "sRGB nonlinear" 0.000 0.000 1.000 }
+	texture "resources/textures/wood1.jpg"
 }
 
 shader {

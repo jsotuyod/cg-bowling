@@ -14,6 +14,8 @@ import bowling.utils.sc.Shader;
 import cg.math.Matrix4;
 import cg.utils.Color;
 
+import com.jme.image.Image;
+import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -21,6 +23,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
+import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.model.converters.FormatConverter;
@@ -92,8 +95,14 @@ public class ScToJme extends FormatConverter {
         	if (p.peekNextToken("diff")) {
 	            shader = new DiffuseShader(name, parseColor(p));
 	            shadersMap.put(name, shader);
-        	} else {
-        		throw new UnsupportedShaderException("Unsupported shader type found: " + type);
+        	} else if (p.peekNextToken("texture")) {
+            	String textureFilePath = p.getNextToken();
+            	
+            	Texture tex = TextureManager.loadTexture(textureFilePath,
+                        Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+            	
+            	shader = new DiffuseShader(name, tex);
+	            shadersMap.put(name, shader);
         	}
         } else {
         	throw new UnsupportedShaderException("Unsupported shader type found: " + type);
