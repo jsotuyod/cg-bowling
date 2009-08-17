@@ -18,7 +18,6 @@ public class DiffuseShader implements Shader {
 	private Color color;
 	private Texture texture;
 	
-	// TODO : Add texture support!
 	public DiffuseShader(String name, Color color) {
 		super();
 		this.name = name;
