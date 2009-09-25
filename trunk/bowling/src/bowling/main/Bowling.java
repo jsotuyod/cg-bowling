@@ -12,7 +12,8 @@ import java.util.List;
 import bowling.input.InputHandler;
 import bowling.logic.domain.Ball;
 import bowling.logic.domain.Pin;
-import bowling.menu.MainMenu;
+import bowling.menu.Menu;
+import bowling.menu.MenuItem;
 import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
@@ -134,7 +135,11 @@ public class Bowling extends SimplePhysicsGame {
     }
 	
     private void setUpMainMenu() {
-		GameState menu = new MainMenu();
+    	List<MenuItem> menuItems = new LinkedList<MenuItem>();
+    	menuItems.add(new MenuItem("start", "Comenzar Juego", null));
+    	menuItems.add(new MenuItem("options", "Opciones", null));
+    	menuItems.add(new MenuItem("exit", "Salir", null));
+		GameState menu = new Menu("main menu", menuItems);
 		menu.setActive(true);
 		GameStateManager.getInstance().attachChild(menu);
 	}

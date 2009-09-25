@@ -1,12 +1,16 @@
 package bowling.menu;
 
-import bowling.input.MenuInputHandler;
+import java.util.List;
+
 
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
 import com.jme.input.InputHandler;
 import com.jme.input.Mouse;
+import com.jme.math.Vector3f;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.Text;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
@@ -14,7 +18,10 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jmex.game.state.BasicGameState;
 
-public class MainMenu extends BasicGameState {
+public class Menu extends BasicGameState {
+
+	private static final float FONT_SCALE = 4;
+	private static final float SPACE_BETWEEN_ITEMS = 50;
 
 	protected DisplaySystem display;
 	
@@ -23,22 +30,35 @@ public class MainMenu extends BasicGameState {
 	protected InputHandler input;
 	protected Mouse mouse;
 	
-	public MainMenu() {
-		super("main menu");
+	public Menu(String name, List<MenuItem> items) {
+		super(name);
 		
 		this.display = DisplaySystem.getDisplaySystem();
         
 		initInput();
         initCursor();
         
-        Text startGameNode = Text.createDefaultTextLabel("start", "Start game");
-        startGameNode.setLocalTranslation(50, 200, 0);
-        rootNode.attachChild(startGameNode);
-		
-        // TODO : Add menu items
-//		Text startGameNode = Text.createDefaultTextLabel("start", "Start game");
-//		startGameNode.setLocalTranslation(50, 200, 0);
-//		rootNode.attachChild(startGameNode);
+        int counter = 0;
+        for (MenuItem menuItem : items) {
+        	Text menuItemNode = Text.createDefaultTextLabel(menuItem.getName(), menuItem.getDisplayText());
+        	menuItemNode.setLocalScale(FONT_SCALE);
+        	
+        	// Compute the position of each item along the Y axis to make them centered
+        	float totalMenuHeight = menuItemNode.getHeight() * items.size() + SPACE_BETWEEN_ITEMS * (items.size() - 1);
+        	float positionY = display.getHeight() - (display.getHeight() - totalMenuHeight) / 2 - counter * (menuItemNode.getHeight() + SPACE_BETWEEN_ITEMS) - menuItemNode.getHeight() / 2;
+        	
+        	float positionX = (display.getWidth() - menuItemNode.getWidth()) / 2;
+        	counter++;
+        	
+        	menuItemNode.setLocalTranslation(positionX, positionY, 0);
+            rootNode.attachChild(menuItemNode);
+		}
+        
+        // Make sure everything renders properly
+        rootNode.setLightCombineMode(Spatial.LightCombineMode.Off);
+        rootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+        rootNode.updateRenderState();
+        rootNode.updateGeometricState(0, true);
 	}
 	
 	/**
@@ -75,7 +95,7 @@ public class MainMenu extends BasicGameState {
 	 * Inits the input handler we will use for navigation of the menu.
 	 */
 	protected void initInput() {
-		input = new MenuInputHandler(this);
+		input = new InputHandler();
 
         mouse = new AbsoluteMouse("Mouse Input", display.getWidth(),
                 display.getHeight());
