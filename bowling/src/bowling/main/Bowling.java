@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import bowling.input.CancelMenuItemListener;
 import bowling.input.InputHandler;
 import bowling.logic.domain.Ball;
 import bowling.logic.domain.Pin;
@@ -138,7 +139,7 @@ public class Bowling extends SimplePhysicsGame {
     	List<MenuItem> menuItems = new LinkedList<MenuItem>();
     	menuItems.add(new MenuItem("start", "Comenzar Juego", null));
     	menuItems.add(new MenuItem("options", "Opciones", null));
-    	menuItems.add(new MenuItem("exit", "Salir", null));
+    	menuItems.add(new MenuItem("exit", "Salir", new CancelMenuItemListener()));
 		GameState menu = new Menu("main menu", menuItems);
 		menu.setActive(true);
 		GameStateManager.getInstance().attachChild(menu);

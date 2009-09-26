@@ -2,12 +2,20 @@ package bowling.menu;
 
 import java.util.List;
 
+import bowling.input.MenuItemListener;
 
 import com.jme.image.Texture;
 import com.jme.input.AbsoluteMouse;
 import com.jme.input.InputHandler;
 import com.jme.input.Mouse;
+import com.jme.input.MouseInput;
+import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.MouseInputAction;
+import com.jme.intersection.BoundingPickResults;
+import com.jme.intersection.PickResults;
+import com.jme.math.Ray;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
@@ -34,7 +42,7 @@ public class Menu extends BasicGameState {
 		super(name);
 		
 		this.display = DisplaySystem.getDisplaySystem();
-        
+		
 		initInput();
         initCursor();
         
@@ -52,6 +60,16 @@ public class Menu extends BasicGameState {
         	
         	menuItemNode.setLocalTranslation(positionX, positionY, 0);
             rootNode.attachChild(menuItemNode);
+            
+            // Add event handlers
+            MenuItemListener listener = menuItem.getListener();
+            if (listener != null) {
+            	if (listener.getBindedKey() != null) {
+            		input.addAction(listener, InputHandler.DEVICE_KEYBOARD, listener.getBindedKey(), InputHandler.AXIS_NONE, false);
+            	}
+
+            	input.addAction(new MouseItemSelector(listener, menuItemNode));
+            }
 		}
         
         // Make sure everything renders properly
@@ -106,5 +124,41 @@ public class Menu extends BasicGameState {
 	public void update(float tpf) {
 		input.update(tpf);
 		super.update(tpf);
+	}
+	
+	class MouseItemSelector extends MouseInputAction {
+
+		protected MenuItemListener listener;
+		protected Text textNode;
+		
+		public MouseItemSelector(MenuItemListener listener, Text textNode) {
+			super();
+			this.listener = listener;
+			this.textNode = textNode;
+		}
+
+		@Override
+		public void performAction(InputActionEvent evt) {
+			
+			if (MouseInput.get().isButtonDown(0)) {	// It's a click!
+				Camera camera = Menu.this.display.getRenderer().getCamera();
+				
+				// Get vector from camera to mouse
+				Vector3f dirToMouse = Menu.this.cursor.getWorldTranslation().subtract(camera.getLocation()).normalizeLocal();
+				
+				// Check if it intersects the text node
+				Ray ray = new Ray(camera.getLocation(), dirToMouse);
+	            PickResults results = new BoundingPickResults();
+	            textNode.findPick(ray,results);
+	            
+	            System.out.println("Testing mouse....");
+	
+	            if (results.getNumber() > 0) {
+	            	// Trigger event!
+	            	listener.performAction(evt);
+	            	System.out.println("SUCCESS!!");
+	            }
+			}
+		}
 	}
 }

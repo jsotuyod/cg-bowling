@@ -1,5 +1,7 @@
 package bowling.menu;
 
+import bowling.input.MenuItemListener;
+
 public class MenuItem {
 
 	protected String name;
