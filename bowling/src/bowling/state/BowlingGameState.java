@@ -7,6 +7,7 @@ import bowling.asset.AssetManager;
 import bowling.input.GameInputHandler;
 import bowling.logic.domain.Ball;
 import bowling.logic.domain.Pin;
+import bowling.logic.domain.Powermeter;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -41,6 +42,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private Ball ball;
 	private List<Pin> pins;
 	
+	private Powermeter powermeter;
+	
 	/**
 	 * Creates a new bowling game state.
 	 */
@@ -58,6 +61,8 @@ public class BowlingGameState extends PhysicsGameState {
 		this.resetScene();
 		
 		this.setLights();
+		
+		this.setPowermeter();
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -221,20 +226,52 @@ public class BowlingGameState extends PhysicsGameState {
 	}
 	
 	/**
-	 * Initializes game scene's lights
+	 * Initializes game scene's lights.
 	 */
 	private void setLights() {
 		// Set up a basic, default light.
-        PointLight light = new PointLight();
-        light.setDiffuse(new ColorRGBA( 0.75f, 0.75f, 0.75f, 0.75f ));
-        light.setAmbient(new ColorRGBA( 0.5f, 0.5f, 0.5f, 1.0f ));
-        light.setLocation(new Vector3f(100, 100, 100));
-        light.setEnabled(true);
+		PointLight light = new PointLight();
+		light.setDiffuse(new ColorRGBA( 0.75f, 0.75f, 0.75f, 0.75f ));
+		light.setAmbient(new ColorRGBA( 0.5f, 0.5f, 0.5f, 1.0f ));
+		light.setLocation(new Vector3f(100, 100, 100));
+		light.setEnabled(true);
 
-        // Attach the light to a lightState and the lightState to rootNode.
-        LightState lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-        lightState.setEnabled(true);
-        lightState.attach(light);
-        rootNode.setRenderState(lightState);
+		// Attach the light to a lightState and the lightState to rootNode.
+		LightState lightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+		lightState.setEnabled(true);
+		lightState.attach(light);
+		rootNode.setRenderState(lightState);
+	}
+	
+	/**
+	 * Sets the powermeter.
+	 */
+	private void setPowermeter() {
+		powermeter = new Powermeter();
+		powermeter.setVisible(true);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.jmex.physics.util.states.PhysicsGameState#update(float)
+	 */
+	@Override
+	public void update(float tpf) {
+		super.update(tpf);
+		
+		// Update the power meter
+		powermeter.update(tpf);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.jmex.game.state.BasicGameState#render(float)
+	 */
+	@Override
+	public void render(float tpf) {
+		super.render(tpf);
+		
+		// Render the power meter
+		powermeter.render(tpf);
 	}
 }

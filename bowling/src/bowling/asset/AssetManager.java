@@ -10,7 +10,13 @@ import java.io.OutputStream;
 import bowling.utils.ScToJme;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Texture;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+import com.jme.scene.state.BlendState;
+import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
+import com.jme.util.TextureManager;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.physics.PhysicsNode;
@@ -22,6 +28,7 @@ public class AssetManager {
 
 	final private static String RESOURCE_PATH = "resources" + File.separatorChar;
 	final private static String MODELS_PATH = RESOURCE_PATH + "models" + File.separatorChar;
+	final private static String TEXTURES_PATH = RESOURCE_PATH + "textures" + File.separatorChar;
 	
 	final private static String PIN_SC_MODEL_PATH = MODELS_PATH + "pin.sc";
 	final private static String PIN_JME_MODEL_PATH = MODELS_PATH + "pin.jme";
@@ -31,6 +38,11 @@ public class AssetManager {
 	
 	final private static String LANE_SC_MODEL_PATH = MODELS_PATH + "lane.sc";
 	final private static String LANE_JME_MODEL_PATH = MODELS_PATH + "lane.jme";
+	
+	final private static String CURSOR_TEXTURE_PATH = TEXTURES_PATH + "cursor1.png";
+	
+	final private static String POWERMETER_CONTAINER_TEXTURE_PATH = TEXTURES_PATH + "powermeter-container.png";
+	final private static String POWERMETER_BAR_TEXTURE_PATH = TEXTURES_PATH + "powermeter-bar.png";
 	
 	
 	private static AssetManager instance;
@@ -137,5 +149,57 @@ public class AssetManager {
 	public void loadLane(Node parent, boolean generatePhysics) {
 		
 		this.loadModel(LANE_JME_MODEL_PATH, parent, generatePhysics);
+	}
+	
+	/**
+	 * Loads the requested texture into the given node.
+	 * @param path The path to the texture to be loaded.
+	 * @param container The spatial into which to load the texture.
+	 */
+	private void loadTexture(String path, Spatial container) {
+		Texture texture = TextureManager.loadTexture(path,
+	    	        Texture.MinificationFilter.Trilinear,
+	    	        Texture.MagnificationFilter.Bilinear);
+		
+		TextureState ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+		ts.setTexture(texture);
+		
+		BlendState alpha = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
+		alpha.setBlendEnabled(true);
+		alpha.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		alpha.setDestinationFunction(BlendState.DestinationFunction.One);
+		alpha.setTestEnabled(true);
+		alpha.setTestFunction(BlendState.TestFunction.GreaterThan);
+		alpha.setEnabled(true);
+		
+		container.setRenderState(ts);
+		container.setRenderState(alpha);
+	}
+	
+	/**
+	 * Loads the cursor texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadCursorTexture(Spatial container) {
+		
+		this.loadTexture(CURSOR_TEXTURE_PATH, container);
+	}
+	
+	/**
+	 * Loads the powermeter container texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadPowerMeterContainer(Spatial container) {
+		
+		this.loadTexture(POWERMETER_CONTAINER_TEXTURE_PATH, container);
+	}
+	
+	/**
+	 * Loads the powermeter bar texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadPowerMeterBar(Spatial container) {
+		
+		this.loadTexture(POWERMETER_BAR_TEXTURE_PATH, container);
 	}
 }
