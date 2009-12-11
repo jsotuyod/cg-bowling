@@ -1,26 +1,53 @@
 package bowling.input;
 
+import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.InputActionInterface;
 import com.jme.math.Vector3f;
 import com.jme.scene.Text;
 import com.jmex.physics.DynamicPhysicsNode;
 
-public class InputHandler {
+public class GameInputHandler {
 
-	private com.jme.input.InputHandler input;
+	private InputHandler input;
 	
 	private int forceMagnitude;
 	
-	public InputHandler(com.jme.input.InputHandler input) {
+	private InputActionInterface applyForceAction;
+	private InputActionInterface setForceAction;
+	
+	public GameInputHandler(InputHandler input) {
 		this.input = input;
 	}
 	
+	/**
+	 * Sets all action listeners.
+	 * @param target The node to be targeted by the actions.
+	 */
 	public void setUp(DynamicPhysicsNode target) {
 		
-		input.addAction( new ApplyForceAction(target), com.jme.input.InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, com.jme.input.InputHandler.AXIS_NONE, false );
-        input.addAction( new SetForceAction(), com.jme.input.InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_F, com.jme.input.InputHandler.AXIS_NONE, true );
+		this.clear();
+		
+		this.applyForceAction = new ApplyForceAction(target);
+		this.setForceAction = new SetForceAction();
+		
+		input.addAction(this.applyForceAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
+        input.addAction(this.setForceAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_F, InputHandler.AXIS_NONE, true );
+	}
+	
+	/**
+	 * Removes all previously added action listeners.
+	 */
+	public void clear() {
+		if (this.applyForceAction != null) {
+			input.removeAction(this.applyForceAction);
+		}
+		
+		if (this.setForceAction != null) {
+			input.removeAction(this.setForceAction);
+		}
 	}
 	
 	public Text getInstructions() {
