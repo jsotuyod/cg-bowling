@@ -1,5 +1,7 @@
 package bowling.input;
 
+import bowling.state.BowlingGameState;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputAction;
@@ -9,84 +11,75 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Text;
 import com.jmex.physics.DynamicPhysicsNode;
 
+/**
+ * The game input handler
+ */
 public class GameInputHandler {
 
 	private InputHandler input;
 	
-	private int forceMagnitude;
+	private InputActionInterface barStopedAction;
 	
-	private InputActionInterface applyForceAction;
-	private InputActionInterface setForceAction;
-	
+	/**
+	 * Creates a new game input handler.
+	 * @param input The input from which to receive events.
+	 */
 	public GameInputHandler(InputHandler input) {
 		this.input = input;
 	}
 	
 	/**
 	 * Sets all action listeners.
-	 * @param target The node to be targeted by the actions.
+	 * @param target The bowling game state to which to notify events.
 	 */
-	public void setUp(DynamicPhysicsNode target) {
+	public void setUp(BowlingGameState target) {
 		
 		this.clear();
 		
-		this.applyForceAction = new ApplyForceAction(target);
-		this.setForceAction = new SetForceAction();
+		this.barStopedAction = new BarStopedAction(target);
 		
-		input.addAction(this.applyForceAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
-        input.addAction(this.setForceAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_F, InputHandler.AXIS_NONE, true );
+		input.addAction(this.barStopedAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
 	}
 	
 	/**
 	 * Removes all previously added action listeners.
 	 */
 	public void clear() {
-		if (this.applyForceAction != null) {
-			input.removeAction(this.applyForceAction);
-		}
-		
-		if (this.setForceAction != null) {
-			input.removeAction(this.setForceAction);
+		if (this.barStopedAction != null) {
+			input.removeAction(this.barStopedAction);
 		}
 	}
 	
 	public Text getInstructions() {
-		Text label = Text.createDefaultTextLabel( "instructions", "[f] to increase force. [space bar] to throw the ball." );
+		Text label = Text.createDefaultTextLabel( "instructions", "[space bar] to stop the power, direction and angle meters." );
         label.setLocalTranslation( 0, 20, 0 );
         
         return label;
 	}
 	
-	private class ApplyForceAction extends InputAction {
+	/**
+	 * Handler for stoping the bar.
+	 */
+	private class BarStopedAction extends InputAction {
 
-		private DynamicPhysicsNode target;
+		private BowlingGameState target;
 		
-        public ApplyForceAction(DynamicPhysicsNode target) {
+		/**
+		 * Creates a new BarStopedAction.
+		 * @param target The bowling game state to receive notifications.
+		 */
+        public BarStopedAction(BowlingGameState target) {
         	this.target = target;
         }
 
-        public void performAction( InputActionEvent evt ) {
+        /**
+         * Handles the event.
+         * @param evt The event object.
+         */
+        public void performAction(InputActionEvent evt) {
             if ( evt.getTriggerPressed() ) {
-                // key goes down - apply motion
-            	this.target.addForce( new Vector3f(0, 0, forceMagnitude) );
+            	this.target.barStoped();
             }
         }
     }
-	
-	//TODO: sacar esta clase afuera, meterla en un package aparte	
-	private class SetForceAction extends InputAction {
-		private static final int FORCE_STEP = 50;
-		private static final int FORCE_MIN = 0;
-		private static final int FORCE_MAX = 20000;
-
-		public SetForceAction( ) {
-			forceMagnitude = FORCE_MIN;
-        }
-
-        public void performAction( InputActionEvent evt ) {
-            if ( evt.getTriggerAllowsRepeats() && forceMagnitude < FORCE_MAX) {
-            	forceMagnitude += FORCE_STEP;
-            }
-        }
-	}
 }
