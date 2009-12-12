@@ -47,6 +47,8 @@ public class AssetManager {
 	final private static String DIRECTIONMETER_CONTAINER_TEXTURE_PATH = TEXTURES_PATH + "directionmeter-container.png";
 	final private static String DIRECTIONMETER_AIM_TEXTURE_PATH = TEXTURES_PATH + "directionmeter-aim.png";
 	
+	final private static String ANGLEMETER_TEXTURE_PATH = TEXTURES_PATH + "anglemeter-container.png";
+	
 	
 	private static AssetManager instance;
 	
@@ -222,5 +224,14 @@ public class AssetManager {
 	public void loadDirectionMeterAim(Spatial container) {
 		
 		this.loadTexture(DIRECTIONMETER_AIM_TEXTURE_PATH, container);
+	}
+
+	/**
+	 * Loads the angle meter texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadAngleMeterContainer(Spatial container) {
+		
+		this.loadTexture(ANGLEMETER_TEXTURE_PATH, container);
 	}
 }
