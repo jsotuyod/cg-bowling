@@ -22,6 +22,8 @@ public class AngleMeter extends GameDisplay {
 	final private static float CYCLE_TIME = 2;
 	final private static float HALF_CYCLE_TIME = CYCLE_TIME / 2;
 	
+	private static final int DISTANCE_FOR_ANGLE_COMPUTATION = 2;
+	
 	protected Quad image;
 	
 	protected int lastCol;
@@ -42,13 +44,13 @@ public class AngleMeter extends GameDisplay {
 		super.init();
 		
 		// Load the direction meter container
-		this.image = new Quad("anglemeter container texture", 135, 54);
+		this.image = new Quad("anglemeter container texture", 128, 54);
 		AssetManager.getInstance().loadAngleMeterContainer(this.image);
 		this.containerNode.attachChild(this.image);
 		
 		this.containerNode.setLocalTranslation(DisplaySystem.getDisplaySystem().getWidth() - 200, 230, 0);
 		
-		this.lastCol = 134;
+		this.lastCol = 127;
 	}
 	
 	/*
@@ -112,7 +114,34 @@ public class AngleMeter extends GameDisplay {
 	 */
 	public float getAngle() {
 		
-		// TODO : Fill this in!!
-		return 0;
+		TextureState ts = (TextureState) this.image.getRenderState(StateType.Texture);
+		Texture texture = ts.getTexture();
+		Image img = texture.getImage();
+		ByteBuffer data = img.getData().get(0);
+		
+		// We will compute angle from the image itself (sneaky)
+		int startCol = Math.min(lastCol + DISTANCE_FOR_ANGLE_COMPUTATION, img.getWidth() - 1);
+		int endCol = Math.max(lastCol - DISTANCE_FOR_ANGLE_COMPUTATION, 0);
+		
+		int startValue = img.getHeight() - 1;
+		int endValue = img.getHeight() - 1;
+		
+		// Go over the y axis to find the first coloured point
+		for (int j = startValue; j > 0; j--) {
+			if ((data.getInt(4 * (j * img.getWidth() + startCol)) & 0xFF000000) != 0x00000000) {
+				startValue = j;
+				break;
+			}
+		}
+		
+		for (int j = endValue; j > 0; j--) {
+			if ((data.getInt(4 * (j * img.getWidth() + endCol)) & 0xFF000000) != 0x00000000) {
+				endValue = j;
+				break;
+			}
+		}
+		
+		// Compute angle
+		return (float) Math.atan((startValue - endValue) / (float) (startCol - endCol + 1));
 	}
 }

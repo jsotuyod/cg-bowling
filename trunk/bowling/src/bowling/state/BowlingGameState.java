@@ -15,6 +15,7 @@ import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
 import com.jme.light.PointLight;
+import com.jme.math.Matrix4f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
@@ -326,7 +327,23 @@ public class BowlingGameState extends PhysicsGameState {
 			
 		case SET_V_ANGLE:
 			anglemeter.setPaused(true);
-			this.ball.getNode().addForce(directionmeter.getDirection().multLocal(powermeter.getPower()));
+			
+			Vector3f force = directionmeter.getDirection();
+			float yAngle = anglemeter.getAngle();
+			
+			System.out.println("ANGULO : " + yAngle);
+			System.out.println("DIR : " + force);
+			
+			// Build rotation matrix accross a vector perpendicular to the direction on the same plane
+			Matrix4f transform = new Matrix4f();
+			transform.fromAngleNormalAxis(yAngle, new Vector3f(force.z, 0, -force.x));
+			
+			force = transform.mult(force);
+			System.out.println("DIR POSTA : " + force);
+			force.multLocal(powermeter.getPower());
+			System.out.println("FUERZA : " + force);
+			
+			this.ball.getNode().addForce(force);
 			break;
 
 		default:
