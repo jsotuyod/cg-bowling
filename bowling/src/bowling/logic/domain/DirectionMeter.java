@@ -2,6 +2,7 @@ package bowling.logic.domain;
 
 import bowling.asset.AssetManager;
 
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 import com.jme.system.DisplaySystem;
@@ -13,6 +14,11 @@ public class DirectionMeter extends GameDisplay {
 
 	final private static float CYCLE_TIME = 2;
 	final private static float HALF_CYCLE_TIME = CYCLE_TIME / 2;
+	
+	/**
+	 * Maximum direction in the x axis.
+	 */
+	final private static float MAX_ANGLE = (float) Math.PI / 12;
 	
 	protected Node aimNode;
 	
@@ -65,5 +71,17 @@ public class DirectionMeter extends GameDisplay {
 		} else {
 			this.aimNode.getLocalTranslation().x = 90 - ((currentTick - HALF_CYCLE_TIME) / HALF_CYCLE_TIME ) * 180;
 		}
+	}
+	
+	/**
+	 * Retrieves the current direction.
+	 * @return The current direction
+	 */
+	public Vector3f getDirection() {
+		
+		float dirX = this.aimNode.getLocalTranslation().x;
+		float angle = MAX_ANGLE * (dirX / 90);
+		
+		return new Vector3f((float) -Math.sin(angle), 0, (float) Math.cos(angle));
 	}
 }

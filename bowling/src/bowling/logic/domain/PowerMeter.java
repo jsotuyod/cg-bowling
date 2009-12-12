@@ -14,6 +14,9 @@ public class PowerMeter extends GameDisplay {
 	final private static float CYCLE_TIME = 2;
 	final private static float HALF_CYCLE_TIME = CYCLE_TIME / 2;
 	
+	final private static float MAX_POWER = 20000;
+	final private static float MIN_POWER = 10000;
+	
 	protected Node barNode;
 	
 	/**
@@ -64,5 +67,14 @@ public class PowerMeter extends GameDisplay {
 		} else {
 			this.barNode.getLocalScale().y = currentTick / HALF_CYCLE_TIME;
 		}
+	}
+	
+	/**
+	 * Retrieves the power indicated by the power meter.
+	 * @return The power indicated by the power meter.
+	 */
+	public float getPower() {
+		
+		return MIN_POWER + (MAX_POWER - MIN_POWER) * this.barNode.getLocalScale().y;
 	}
 }

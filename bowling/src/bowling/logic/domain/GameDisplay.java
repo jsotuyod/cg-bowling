@@ -15,6 +15,7 @@ public abstract class GameDisplay {
 	protected float currentTick;
 	
 	protected boolean visible;
+	protected boolean paused;
 	
 	/**
 	 * Creates a new instance of GameDisplay.
@@ -25,6 +26,7 @@ public abstract class GameDisplay {
 		this.containerNode = new Node(name);
 		
 		this.visible = false;
+		this.paused = true;
 		
 		this.currentTick = 0;
 		
@@ -57,7 +59,7 @@ public abstract class GameDisplay {
 	 * Retrieves the current display's visibility setting.
 	 * @return True if the display is visible, false otherwise.
 	 */
-	public boolean getVisible() {
+	public boolean isVisible() {
 		return this.visible;
 	}
 	
@@ -67,7 +69,7 @@ public abstract class GameDisplay {
 	 */
 	public final void update(float tpf) {
 		
-		if (this.visible) {
+		if (!this.paused) {
 			currentTick += tpf;
 			
 			this.simpleUpdate();
@@ -93,5 +95,21 @@ public abstract class GameDisplay {
 		if (this.visible) {
 			DisplaySystem.getDisplaySystem().getRenderer().draw(this.containerNode);
 		}
+	}
+
+	/**
+	 * Retrieves wether the display is paused or not.
+	 * @return True if the display is paused, false otherwise.
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+
+	/**
+	 * Sets the display paused state-
+	 * @param paused True if the display should be paused, false otherwise.
+	 */
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 }

@@ -9,6 +9,7 @@ import bowling.logic.domain.Ball;
 import bowling.logic.domain.DirectionMeter;
 import bowling.logic.domain.Pin;
 import bowling.logic.domain.PowerMeter;
+import bowling.logic.domain.ThrowPhase;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -46,6 +47,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private PowerMeter powermeter;
 	private DirectionMeter directionmeter;
 	
+	private ThrowPhase currentPhase;
+	
 	/**
 	 * Creates a new bowling game state.
 	 */
@@ -66,6 +69,8 @@ public class BowlingGameState extends PhysicsGameState {
 		
 		this.setPowerMeter();
 		this.setDirectionMeter();
+		
+		this.currentPhase = ThrowPhase.SET_POWER;
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -218,7 +223,7 @@ public class BowlingGameState extends PhysicsGameState {
 		if (active) {
 			// Set game input handler
 			if (this.inputHandler != null) {
-				this.inputHandler.setUp(this.ball.getNode());
+				this.inputHandler.setUp(this);
 			}
 		} else {
 			// Clear the input handler
@@ -252,6 +257,7 @@ public class BowlingGameState extends PhysicsGameState {
 	private void setPowerMeter() {
 		powermeter = new PowerMeter();
 		powermeter.setVisible(true);
+		powermeter.setPaused(false);
 	}
 	
 	/**
@@ -259,7 +265,6 @@ public class BowlingGameState extends PhysicsGameState {
 	 */
 	private void setDirectionMeter() {
 		directionmeter = new DirectionMeter();
-		directionmeter.setVisible(true);
 	}
 	
 	/*
@@ -286,5 +291,29 @@ public class BowlingGameState extends PhysicsGameState {
 		// Render the game displays
 		powermeter.render(tpf);
 		directionmeter.render(tpf);
+	}
+
+	/**
+	 * Notify the game state that a bar has been stoped.
+	 */
+	public void barStoped() {
+		switch (currentPhase) {
+		case SET_POWER:
+			powermeter.setPaused(true);
+			currentPhase = ThrowPhase.SET_H_ANGLE;
+			directionmeter.setVisible(true);
+			directionmeter.setPaused(false);
+			break;
+		
+		case SET_H_ANGLE:
+			directionmeter.setPaused(true);
+			currentPhase = ThrowPhase.SET_V_ANGLE;
+			// TODO : We need V ANGLE first!
+			this.ball.getNode().addForce(directionmeter.getDirection().multLocal(powermeter.getPower()));
+			break;
+
+		default:
+			break;
+		}
 	}
 }
