@@ -5,6 +5,7 @@ import java.util.List;
 
 import bowling.asset.AssetManager;
 import bowling.input.GameInputHandler;
+import bowling.logic.domain.AngleMeter;
 import bowling.logic.domain.Ball;
 import bowling.logic.domain.DirectionMeter;
 import bowling.logic.domain.Pin;
@@ -46,6 +47,7 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	private PowerMeter powermeter;
 	private DirectionMeter directionmeter;
+	private AngleMeter anglemeter;
 	
 	private ThrowPhase currentPhase;
 	
@@ -69,6 +71,7 @@ public class BowlingGameState extends PhysicsGameState {
 		
 		this.setPowerMeter();
 		this.setDirectionMeter();
+		this.setAngleMeter();
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
@@ -267,6 +270,13 @@ public class BowlingGameState extends PhysicsGameState {
 		directionmeter = new DirectionMeter();
 	}
 	
+	/**
+	 * Sets the angle meter.
+	 */
+	private void setAngleMeter() {
+		anglemeter = new AngleMeter();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.jmex.physics.util.states.PhysicsGameState#update(float)
@@ -278,6 +288,7 @@ public class BowlingGameState extends PhysicsGameState {
 		// Update the game displays
 		powermeter.update(tpf);
 		directionmeter.update(tpf);
+		anglemeter.update(tpf);
 	}
 	
 	/*
@@ -291,6 +302,7 @@ public class BowlingGameState extends PhysicsGameState {
 		// Render the game displays
 		powermeter.render(tpf);
 		directionmeter.render(tpf);
+		anglemeter.render(tpf);
 	}
 
 	/**
@@ -308,7 +320,12 @@ public class BowlingGameState extends PhysicsGameState {
 		case SET_H_ANGLE:
 			directionmeter.setPaused(true);
 			currentPhase = ThrowPhase.SET_V_ANGLE;
-			// TODO : We need V ANGLE first!
+			anglemeter.setVisible(true);
+			anglemeter.setPaused(false);
+			break;
+			
+		case SET_V_ANGLE:
+			anglemeter.setPaused(true);
 			this.ball.getNode().addForce(directionmeter.getDirection().multLocal(powermeter.getPower()));
 			break;
 
