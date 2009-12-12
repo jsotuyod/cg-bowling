@@ -44,6 +44,9 @@ public class AssetManager {
 	final private static String POWERMETER_CONTAINER_TEXTURE_PATH = TEXTURES_PATH + "powermeter-container.png";
 	final private static String POWERMETER_BAR_TEXTURE_PATH = TEXTURES_PATH + "powermeter-bar.png";
 	
+	final private static String DIRECTIONMETER_CONTAINER_TEXTURE_PATH = TEXTURES_PATH + "directionmeter-container.png";
+	final private static String DIRECTIONMETER_AIM_TEXTURE_PATH = TEXTURES_PATH + "directionmeter-aim.png";
+	
 	
 	private static AssetManager instance;
 	
@@ -186,7 +189,7 @@ public class AssetManager {
 	}
 	
 	/**
-	 * Loads the powermeter container texture into the given node.
+	 * Loads the power meter container texture into the given node.
 	 * @param container The spatial into which to load the texture.
 	 */
 	public void loadPowerMeterContainer(Spatial container) {
@@ -195,11 +198,29 @@ public class AssetManager {
 	}
 	
 	/**
-	 * Loads the powermeter bar texture into the given node.
+	 * Loads the power meter bar texture into the given node.
 	 * @param container The spatial into which to load the texture.
 	 */
 	public void loadPowerMeterBar(Spatial container) {
 		
 		this.loadTexture(POWERMETER_BAR_TEXTURE_PATH, container);
+	}
+
+	/**
+	 * Loads the direction meter container texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadDirectionMeterContainer(Spatial container) {
+		
+		this.loadTexture(DIRECTIONMETER_CONTAINER_TEXTURE_PATH, container);
+	}
+
+	/**
+	 * Loads the direction meter aim texture into the given node.
+	 * @param container The spatial into which to load the texture.
+	 */
+	public void loadDirectionMeterAim(Spatial container) {
+		
+		this.loadTexture(DIRECTIONMETER_AIM_TEXTURE_PATH, container);
 	}
 }

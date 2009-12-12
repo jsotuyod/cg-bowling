@@ -6,8 +6,9 @@ import java.util.List;
 import bowling.asset.AssetManager;
 import bowling.input.GameInputHandler;
 import bowling.logic.domain.Ball;
+import bowling.logic.domain.DirectionMeter;
 import bowling.logic.domain.Pin;
-import bowling.logic.domain.Powermeter;
+import bowling.logic.domain.PowerMeter;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -42,7 +43,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private Ball ball;
 	private List<Pin> pins;
 	
-	private Powermeter powermeter;
+	private PowerMeter powermeter;
+	private DirectionMeter directionmeter;
 	
 	/**
 	 * Creates a new bowling game state.
@@ -62,7 +64,8 @@ public class BowlingGameState extends PhysicsGameState {
 		
 		this.setLights();
 		
-		this.setPowermeter();
+		this.setPowerMeter();
+		this.setDirectionMeter();
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -244,11 +247,19 @@ public class BowlingGameState extends PhysicsGameState {
 	}
 	
 	/**
-	 * Sets the powermeter.
+	 * Sets the power meter.
 	 */
-	private void setPowermeter() {
-		powermeter = new Powermeter();
+	private void setPowerMeter() {
+		powermeter = new PowerMeter();
 		powermeter.setVisible(true);
+	}
+	
+	/**
+	 * Sets the direction meter.
+	 */
+	private void setDirectionMeter() {
+		directionmeter = new DirectionMeter();
+		directionmeter.setVisible(true);
 	}
 	
 	/*
@@ -259,8 +270,9 @@ public class BowlingGameState extends PhysicsGameState {
 	public void update(float tpf) {
 		super.update(tpf);
 		
-		// Update the power meter
+		// Update the game displays
 		powermeter.update(tpf);
+		directionmeter.update(tpf);
 	}
 	
 	/*
@@ -271,7 +283,8 @@ public class BowlingGameState extends PhysicsGameState {
 	public void render(float tpf) {
 		super.render(tpf);
 		
-		// Render the power meter
+		// Render the game displays
 		powermeter.render(tpf);
+		directionmeter.render(tpf);
 	}
 }
