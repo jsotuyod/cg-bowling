@@ -1,5 +1,6 @@
 package bowling.main;
 
+import bowling.audio.AudioManager;
 import bowling.state.BowlingGameState;
 import bowling.state.MainMenuState;
 
@@ -9,9 +10,12 @@ import com.jmex.physics.util.SimplePhysicsGame;
 
 public class Bowling extends SimplePhysicsGame {
 
+	private AudioManager audioManager = new AudioManager();
+	
 	/**
 	 * Init routine for the game.
 	 */
+	@Override
 	protected void simpleInitGame() {
 		// Creates the GameStateManager. Only needs to be called once.
 		GameStateManager.create();
@@ -19,6 +23,8 @@ public class Bowling extends SimplePhysicsGame {
 		this.setUpMainMenu();
 		// TODO : add other game states to the manager
 		this.setUpGame();
+		
+		this.setUpMusic();
 		
 		// TODO : DEBUG ONLY!
 		this.showPhysics = true;
@@ -50,6 +56,18 @@ public class Bowling extends SimplePhysicsGame {
     	BowlingGameState game = BowlingGameState.getState();
     	game.setInputHandler(this.input);
     	GameStateManager.getInstance().attachChild(game);
+    }
+
+    /**
+     * Adds the music to the game.
+     */
+    private void setUpMusic(){
+    	audioManager.startMusic();
+    }
+    
+    @Override
+    protected void simpleUpdate() {
+    	audioManager.updateMusicState();
     }
 
     /**

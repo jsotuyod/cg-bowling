@@ -75,7 +75,8 @@ public class Color implements Cloneable {
         return this;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return String.format("(%.3f, %.3f, %.3f)", r, g, b);
     }
  
