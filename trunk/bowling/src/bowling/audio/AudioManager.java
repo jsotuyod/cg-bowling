@@ -10,9 +10,14 @@ import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
 import com.jmex.audio.MusicTrackQueue.RepeatType;
 
-public class AudioManager {
+/**
+ * This class manages all the application sounds and music
+ * 
+ */
+public class AudioManager{
 
-	private final static String[] audioTracks = { "file:resources/audio/mantra.ogg"};
+	// All the songs that will be included in the queue
+	private final static String[] audioTracks = { "file:resources/audio/mantra.ogg" };
 
 	private boolean enableBackgroundMusic = true;
 	private boolean enableBowlingSound = true;
@@ -44,6 +49,7 @@ public class AudioManager {
 
 	private void setBackGroundMusic() {
 		// Enqueue al background music
+		audioSystem.getMusicQueue().setRepeatType(RepeatType.ALL);
 		for (String audioTrack : audioTracks) {
 			try {
 				audioSystem.getMusicQueue().addTrack(getMusicFromURL(new URL(audioTrack)));
@@ -69,28 +75,29 @@ public class AudioManager {
 		return audioTrack;
 	}
 
+	/**
+	 * Start playing music
+	 */
 	public void startMusic() {
-		 audioSystem.getMusicQueue().setRepeatType(RepeatType.ALL);
-		 audioSystem.getMusicQueue().setCrossfadeinTime(1.5f);
-		 audioSystem.getMusicQueue().setCrossfadeoutTime(1.5f);
+		 audioSystem.getMusicQueue().setCrossfadeinTime(0.5f);
+		 audioSystem.getMusicQueue().setCrossfadeoutTime(0.5f);
 
 		// start playing!
 		if (enableBackgroundMusic) {
-			//TODO ver porque no funciona la cola!!
-//			audioSystem.getMusicQueue().play();
-			try {
-				AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/mantra.ogg"), true).play();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			
+			audioSystem.getMusicQueue().play();
 		}
 	}
 
+	/**
+	 * Enable/disable sounds
+	 */
 	public void toggleBowlingSound() {
 		enableBowlingSound = !enableBowlingSound;
 	}
 
+	/**
+	 * Enable/disable music
+	 */
 	public void toggleBackgroundMusic() {
 		if (!enableBackgroundMusic) {
 			audioSystem.getMusicQueue().play();
@@ -101,18 +108,27 @@ public class AudioManager {
 		}
 	}
 	
+	/**
+	 * Make the ball sound
+	 */
 	public void playBallShotSound() {
 		if (enableBowlingSound) {
 			ballShotSound.play();
 		}
 	}
 	
+	/**
+	 * Make th gutter sound
+	 */
 	public void playGutterSound() {
 		if (enableBowlingSound) {
 			gutterSound.play();
 		}
 	}
 
+	/**
+	 * This method should be called to update the audio system and make everithing work
+	 */
 	public void updateMusicState() {
 		if (enableBackgroundMusic) {
 			if (KeyBindingManager.getKeyBindingManager().isValidCommand("PREVIOUS_TRACK", false)) {
@@ -139,33 +155,5 @@ public class AudioManager {
 	
 	public boolean isEnableBowlingSound() {
 		return enableBowlingSound;
-	}
-	
-	public static void main(String[] args) {
-		AudioManager audioManager = new AudioManager();
-		
-		System.out.println("Playing ball shot sound....");
-		audioManager.playBallShotSound();
-		try {
-			Thread.sleep(8000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("Playing gutter sound...");
-		audioManager.playGutterSound();
-		try {
-			Thread.sleep(8000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("Playing background music....");
-		audioManager.startMusic();
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 }

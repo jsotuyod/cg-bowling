@@ -1,6 +1,5 @@
 package bowling.logic.score;
 
-import java.awt.image.BufferStrategy;
 
 
 public class Point {
@@ -37,6 +36,7 @@ public class Point {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		StringBuffer str = new StringBuffer();
 		if (this.getSecondShootValue() == STRIKE) {

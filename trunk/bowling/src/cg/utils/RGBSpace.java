@@ -170,7 +170,8 @@ public class RGBSpace {
         return (rp << 16) | (gp << 8) | bp;
     }
 
-    public final String toString() {
+    @Override
+	public final String toString() {
         String info = "Gamma function parameters:\n";
         info += String.format("  * Gamma:          %7.4f\n", gamma);
         info += String.format("  * Breakpoint:     %7.4f\n", breakPoint);
