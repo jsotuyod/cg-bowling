@@ -52,6 +52,8 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	private ThrowPhase currentPhase;
 	
+	private boolean firstFrame;
+	
 	/**
 	 * Creates a new bowling game state.
 	 */
@@ -75,6 +77,8 @@ public class BowlingGameState extends PhysicsGameState {
 		this.setAngleMeter();
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
+		
+		this.firstFrame = false;
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -290,6 +294,40 @@ public class BowlingGameState extends PhysicsGameState {
 		powermeter.update(tpf);
 		directionmeter.update(tpf);
 		anglemeter.update(tpf);
+		
+		if (!this.firstFrame && currentPhase == ThrowPhase.IN_PROGRESS) {
+			boolean stopped = true;
+			
+			// Check if the throw is over
+			if (ball.hasStopped()) {
+				for (Pin pin : this.pins) {
+					if (!pin.hasStopped()) {
+						stopped = false;
+						System.out.println("PIN " + pin + " NOT STOPPED!");
+					}
+				}
+			} else {
+				stopped = false;
+			}
+			
+			if (stopped) {
+				// TODO : Add points to score, check next movement.
+				
+				for (Pin pin : this.pins) {
+					pin.place();
+				}
+				
+				ball.reset();
+				
+				currentPhase = ThrowPhase.SET_POWER;
+				
+				directionmeter.setVisible(false);
+				anglemeter.setVisible(false);
+				powermeter.reset();
+			}
+		}
+		
+		this.firstFrame = false;
 	}
 	
 	/*
@@ -315,33 +353,30 @@ public class BowlingGameState extends PhysicsGameState {
 			powermeter.setPaused(true);
 			currentPhase = ThrowPhase.SET_H_ANGLE;
 			directionmeter.setVisible(true);
-			directionmeter.setPaused(false);
+			directionmeter.reset();
 			break;
 		
 		case SET_H_ANGLE:
 			directionmeter.setPaused(true);
 			currentPhase = ThrowPhase.SET_V_ANGLE;
 			anglemeter.setVisible(true);
-			anglemeter.setPaused(false);
+			anglemeter.reset();
 			break;
 			
 		case SET_V_ANGLE:
 			anglemeter.setPaused(true);
+			currentPhase = ThrowPhase.IN_PROGRESS;
+			firstFrame = true;
 			
 			Vector3f force = directionmeter.getDirection();
 			float yAngle = anglemeter.getAngle();
-			
-			System.out.println("ANGULO : " + yAngle);
-			System.out.println("DIR : " + force);
 			
 			// Build rotation matrix accross a vector perpendicular to the direction on the same plane
 			Matrix4f transform = new Matrix4f();
 			transform.fromAngleNormalAxis(yAngle, new Vector3f(force.z, 0, -force.x));
 			
 			force = transform.mult(force);
-			System.out.println("DIR POSTA : " + force);
 			force.multLocal(powermeter.getPower());
-			System.out.println("FUERZA : " + force);
 			
 			this.ball.getNode().addForce(force);
 			break;

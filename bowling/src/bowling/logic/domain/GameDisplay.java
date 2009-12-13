@@ -112,4 +112,13 @@ public abstract class GameDisplay {
 	public void setPaused(boolean paused) {
 		this.paused = paused;
 	}
+	
+	/**
+	 * Resets the display, resuming it.
+	 */
+	public void reset() {
+		this.currentTick = 0;
+		
+		this.setPaused(false);
+	}
 }
