@@ -39,7 +39,7 @@ public class Ball {
 	}
 	
 	/**
-	 * Checks if the ball is beyond the given point in space.
+	 * Checks if the ball is beyond the given point in space from the original position.
 	 * @param point The point to check against.
 	 * @return True if the ball is beyond the given point, false otherwise.
 	 */

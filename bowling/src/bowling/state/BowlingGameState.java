@@ -37,6 +37,8 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	final private static float PIN_DISTANCE = 1.3f;
 	final private static float PIN_OFFSET = 30f;
+
+	private static final int LANE_LIMIT = 8;
 	
 	
 	private static BowlingGameState state;
@@ -70,6 +72,8 @@ public class BowlingGameState extends PhysicsGameState {
 		this.createLane();
 		this.createPins();
 		this.createBowlingBall();
+		this.createFloor();
+		this.createWall();
 		
 		this.resetScene();
 		
@@ -79,6 +83,7 @@ public class BowlingGameState extends PhysicsGameState {
 		this.setDirectionMeter();
 		this.setAngleMeter();
 		
+		// TODO : Make this seteable from a menu?
 		this.playerScore = new Score("Juan");
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
@@ -109,8 +114,8 @@ public class BowlingGameState extends PhysicsGameState {
 	public void setupCamera() {
 		Camera cam = DisplaySystem.getDisplaySystem().getRenderer().getCamera();
 		
-    	cam.setLocation(new Vector3f (10f, 20f, -70f));
-        cam.lookAt(new Vector3f(0f, 1.5f, 41f), new Vector3f (0, 1, 0));
+    	cam.setLocation(new Vector3f(0f, 6.5f, -40f));
+        cam.lookAt(new Vector3f(0f, 0f, -20f), new Vector3f (0, 1, 0));
 	}
 	
 	/**
@@ -171,11 +176,31 @@ public class BowlingGameState extends PhysicsGameState {
 	}
 	
 	/**
+	 * Creates the floor
+	 */
+	private void createFloor() {
+		StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
+		rootNode.attachChild(staticNode);
+		
+		AssetManager.getInstance().loadFloor(staticNode, true);
+	}
+	
+	/**
+	 * Creates the wall.
+	 */
+	private void createWall() {
+		StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
+		rootNode.attachChild(staticNode);
+		
+		AssetManager.getInstance().loadWall(staticNode, true);
+	}
+	
+	/**
 	 * Creates the bowling lane.
 	 */
 	private void createLane() {
     	StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
-        rootNode.attachChild( staticNode );
+        rootNode.attachChild(staticNode);
 
         AssetManager.getInstance().loadLane(staticNode, true);
 	}
@@ -185,7 +210,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 */
 	private void createPins() {
     	
-    	if ( null != this.pins ) {
+    	if (null != this.pins) {
     		return;
     	}
     	
@@ -252,9 +277,9 @@ public class BowlingGameState extends PhysicsGameState {
 	private void setLights() {
 		// Set up a basic, default light.
 		PointLight light = new PointLight();
-		light.setDiffuse(new ColorRGBA( 0.75f, 0.75f, 0.75f, 0.75f ));
-		light.setAmbient(new ColorRGBA( 0.5f, 0.5f, 0.5f, 1.0f ));
-		light.setLocation(new Vector3f(100, 100, 100));
+		light.setDiffuse(new ColorRGBA(0.75f, 0.75f, 0.75f, 0.75f));
+		light.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
+		light.setLocation(new Vector3f(0, 100, -70));
 		light.setEnabled(true);
 
 		// Attach the light to a lightState and the lightState to rootNode.
@@ -300,6 +325,13 @@ public class BowlingGameState extends PhysicsGameState {
 		directionmeter.update(tpf);
 		anglemeter.update(tpf);
 		
+		// Check if the ball has exited
+		Vector3f ballPos = this.ball.getNode().getLocalTranslation();
+		
+		if (ballPos.x < -LANE_LIMIT || ballPos.x > LANE_LIMIT) {
+			this.throwFinished(0);
+		}
+		
 		if (!this.firstFrame && currentPhase == ThrowPhase.IN_PROGRESS) {
 			boolean stopped = true;
 			
@@ -323,41 +355,49 @@ public class BowlingGameState extends PhysicsGameState {
 					}
 				}
 				
-				switch (this.playerScore.score(pinsDown)) {
-				case DO_NOTHING:
-					// Remove fallen pins, set everything ready for next throw
-					for (Pin pin : this.pins) {
-						pin.place();
-					}
-					break;
-					
-				case TURN_ENDED:
-					// Set everything so the second player can come next (if it exists)
-					
-				case RESET_PINS_TURN_NOT_ENDED:
-					for (Pin pin : this.pins) {
-						pin.reset();
-					}
-					break;
-					
-				case GAME_ENDED:
-					// TODO : Display final score. Change gamestate maybe?
-					break;
-				}
-				
-				ball.reset();
-				
-				currentPhase = ThrowPhase.SET_POWER;
-				
-				directionmeter.setVisible(false);
-				anglemeter.setVisible(false);
-				powermeter.reset();
+				this.throwFinished(pinsDown);
 			}
 		}
 		
 		this.firstFrame = false;
 	}
 	
+	/**
+	 * Performs clean up after a throw is finished.
+	 * @param pinsDown The number of pins thrown in this ball throw.
+	 */
+	private void throwFinished(int pinsDown) {
+		switch (this.playerScore.score(pinsDown)) {
+		case DO_NOTHING:
+			// Remove fallen pins, set everything ready for next throw
+			for (Pin pin : this.pins) {
+				pin.place();
+			}
+			break;
+			
+		case TURN_ENDED:
+			// Set everything so the second player can come next (if it exists)
+			
+		case RESET_PINS_TURN_NOT_ENDED:
+			for (Pin pin : this.pins) {
+				pin.reset();
+			}
+			break;
+			
+		case GAME_ENDED:
+			// TODO : Display final score. Change gamestate maybe?
+			break;
+		}
+		
+		ball.reset();
+		
+		currentPhase = ThrowPhase.SET_POWER;
+		
+		directionmeter.setVisible(false);
+		anglemeter.setVisible(false);
+		powermeter.reset();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.jmex.game.state.BasicGameState#render(float)
