@@ -2,7 +2,7 @@ package bowling.logic.score;
 
 public enum PinsAction {
 	DO_NOTHING,
-	RESET_PINS,
+	TURN_ENDED,
 	GAME_ENDED,
-	RESET_PINS_DO_NOTHING
+	RESET_PINS_TURN_NOT_ENDED
 }

@@ -11,6 +11,7 @@ import bowling.logic.domain.DirectionMeter;
 import bowling.logic.domain.Pin;
 import bowling.logic.domain.PowerMeter;
 import bowling.logic.domain.ThrowPhase;
+import bowling.logic.score.Score;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -42,6 +43,8 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	
 	private GameInputHandler inputHandler;
+	
+	private Score playerScore;
 	
 	private Ball ball;
 	private List<Pin> pins;
@@ -75,6 +78,8 @@ public class BowlingGameState extends PhysicsGameState {
 		this.setPowerMeter();
 		this.setDirectionMeter();
 		this.setAngleMeter();
+		
+		this.playerScore = new Score("Juan");
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
@@ -303,7 +308,6 @@ public class BowlingGameState extends PhysicsGameState {
 				for (Pin pin : this.pins) {
 					if (!pin.hasStopped()) {
 						stopped = false;
-						System.out.println("PIN " + pin + " NOT STOPPED!");
 					}
 				}
 			} else {
@@ -311,10 +315,34 @@ public class BowlingGameState extends PhysicsGameState {
 			}
 			
 			if (stopped) {
-				// TODO : Add points to score, check next movement.
+				int pinsDown = 0;
 				
 				for (Pin pin : this.pins) {
-					pin.place();
+					if (pin.isFallen()) {
+						pinsDown++;
+					}
+				}
+				
+				switch (this.playerScore.score(pinsDown)) {
+				case DO_NOTHING:
+					// Remove fallen pins, set everything ready for next throw
+					for (Pin pin : this.pins) {
+						pin.place();
+					}
+					break;
+					
+				case TURN_ENDED:
+					// Set everything so the second player can come next (if it exists)
+					
+				case RESET_PINS_TURN_NOT_ENDED:
+					for (Pin pin : this.pins) {
+						pin.reset();
+					}
+					break;
+					
+				case GAME_ENDED:
+					// TODO : Display final score. Change gamestate maybe?
+					break;
 				}
 				
 				ball.reset();
