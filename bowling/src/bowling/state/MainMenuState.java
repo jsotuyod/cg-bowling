@@ -3,7 +3,6 @@ package bowling.state;
 import java.util.LinkedList;
 import java.util.List;
 
-import bowling.input.CancelMenuItemListener;
 import bowling.input.MenuItemListener;
 import bowling.menu.Menu;
 import bowling.menu.MenuItem;
@@ -60,7 +59,14 @@ public class MainMenuState {
 		}));
     	
     	menuItems.add(new MenuItem("options", "Opciones", null));
-    	menuItems.add(new MenuItem("exit", "Salir", new CancelMenuItemListener()));
+    	
+    	menuItems.add(new MenuItem("exit", "Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
+			
+			@Override
+			public void performAction(InputActionEvent evt) {
+				System.exit(0);
+			}
+		}));
 		
 		return new Menu("main menu", menuItems);
 	}
