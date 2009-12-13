@@ -41,7 +41,7 @@ public class Score {
 					point.updateValue(LabelType.SECOND_SHOOT, Point.STRIKE);
 					pendingPoints.add(new PendingPoint(point, 2));
 					currRound++;
-					return PinsAction.RESET_PINS;
+					return PinsAction.TURN_ENDED;
 				} else {
 					point.updateValue(LabelType.FIRST_SHOOT, pinsDown);
 					currShoot++;
@@ -62,7 +62,7 @@ public class Score {
 				currShoot = 0;
 				currRound++;
 
-				return PinsAction.RESET_PINS;
+				return PinsAction.TURN_ENDED;
 			}  else {
 				throw new RuntimeException("Invalid current shot!");
 			}
@@ -73,7 +73,7 @@ public class Score {
 				if (pinsDown == TOTAL_PINS) {
 					point.updateValue(LabelType.FIRST_SHOOT, Point.STRIKE);
 					pendingPoints.add(new PendingPoint(point, 2));
-					return PinsAction.RESET_PINS_DO_NOTHING;
+					return PinsAction.RESET_PINS_TURN_NOT_ENDED;
 				} else {
 					point.updateValue(LabelType.FIRST_SHOOT, pinsDown);
 					return PinsAction.DO_NOTHING;
@@ -89,14 +89,14 @@ public class Score {
 						point.updateValue(LabelType.SECOND_SHOOT, pinsDown);
 					}
 					
-					return PinsAction.RESET_PINS_DO_NOTHING;
+					return PinsAction.RESET_PINS_TURN_NOT_ENDED;
 				} else {
 					int roundPoints = pinsDown + firstShoot;
 					
 					if (roundPoints == TOTAL_PINS) {
 						point.updateValue(LabelType.SECOND_SHOOT, Point.SPARE);
 						pendingPoints.add(new PendingPoint(point, 1));
-						return PinsAction.RESET_PINS_DO_NOTHING;
+						return PinsAction.RESET_PINS_TURN_NOT_ENDED;
 					} else {
 						point.updateValue(LabelType.SECOND_SHOOT, pinsDown);
 						this.totalPoints += roundPoints;

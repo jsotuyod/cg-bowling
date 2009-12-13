@@ -11,6 +11,8 @@ import com.jmex.physics.DynamicPhysicsNode;
 public class Pin {
 
 	private static final float VELOCITY_THRESHOLD = 0.5f;
+
+	private static final float POSITION_THRESHOLD = 0.01f;
 	
 	
 	protected Node parent;
@@ -66,7 +68,7 @@ public class Pin {
 	 * @return True if the pin has fallen, false otherwise.
 	 */
 	public boolean isFallen() {
-		if (node.getLocalTranslation().y < originalPos.y - 0.01f) {
+		if (node.getLocalTranslation().y < originalPos.y - POSITION_THRESHOLD) {
 			return true;
 		}
 		
