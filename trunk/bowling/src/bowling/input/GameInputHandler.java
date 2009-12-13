@@ -7,9 +7,7 @@ import com.jme.input.KeyInput;
 import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.InputActionInterface;
-import com.jme.math.Vector3f;
 import com.jme.scene.Text;
-import com.jmex.physics.DynamicPhysicsNode;
 
 /**
  * The game input handler

@@ -25,9 +25,6 @@ public class Bowling extends SimplePhysicsGame {
 		this.setUpGame();
 		
 		this.setUpMusic();
-		
-		// TODO : DEBUG ONLY!
-		this.showPhysics = true;
     }
 	
 	/*
