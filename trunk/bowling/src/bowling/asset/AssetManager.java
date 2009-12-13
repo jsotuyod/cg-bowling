@@ -39,6 +39,12 @@ public class AssetManager {
 	final private static String LANE_SC_MODEL_PATH = MODELS_PATH + "lane.sc";
 	final private static String LANE_JME_MODEL_PATH = MODELS_PATH + "lane.jme";
 	
+	final private static String FLOOR_SC_MODEL_PATH = MODELS_PATH + "floor.sc";
+	final private static String FLOOR_JME_MODEL_PATH = MODELS_PATH + "floor.jme";
+	
+	final private static String WALL_SC_MODEL_PATH = MODELS_PATH + "wall.sc";
+	final private static String WALL_JME_MODEL_PATH = MODELS_PATH + "wall.jme";
+	
 	final private static String CURSOR_TEXTURE_PATH = TEXTURES_PATH + "cursor1.png";
 	
 	final private static String POWERMETER_CONTAINER_TEXTURE_PATH = TEXTURES_PATH + "powermeter-container.png";
@@ -91,6 +97,14 @@ public class AssetManager {
 			
 			in = new FileInputStream(new File(LANE_SC_MODEL_PATH));
 			out = new FileOutputStream(new File(LANE_JME_MODEL_PATH));
+			converter.convert(in, out);
+			
+			in = new FileInputStream(new File(FLOOR_SC_MODEL_PATH));
+			out = new FileOutputStream(new File(FLOOR_JME_MODEL_PATH));
+			converter.convert(in, out);
+			
+			in = new FileInputStream(new File(WALL_SC_MODEL_PATH));
+			out = new FileOutputStream(new File(WALL_JME_MODEL_PATH));
 			converter.convert(in, out);
 			
 		} catch (IOException e) {
@@ -233,5 +247,25 @@ public class AssetManager {
 	public void loadAngleMeterContainer(Spatial container) {
 		
 		this.loadTexture(ANGLEMETER_TEXTURE_PATH, container);
+	}
+	
+	/**
+	 * Loads the floor model.
+	 * @param parent The node to which to add the floor model.
+	 * @param generatePhysics Wether if the physics should be generated or not.
+	 */
+	public void loadFloor(Node parent, boolean generatePhysics) {
+		
+		this.loadModel(FLOOR_JME_MODEL_PATH, parent, generatePhysics);
+	}
+
+	/**
+	 * Loads the wall model.
+	 * @param parent The node to which to add the wall model.
+	 * @param generatePhysics Wether if the physics should be generated or not.
+	 */
+	public void loadWall(Node parent, boolean generatePhysics) {
+		
+		this.loadModel(WALL_JME_MODEL_PATH, parent, generatePhysics);
 	}
 }
