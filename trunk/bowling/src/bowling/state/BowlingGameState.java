@@ -238,6 +238,7 @@ public class BowlingGameState extends PhysicsGameState {
         	pin.setLocalScale(0.25f);
         	pin.setMaterial(Material.WOOD);
         	pin.computeMass();
+        	pin.setMass(10.0f);
         	
         	Vector3f originalPos = new Vector3f(x[i] * PIN_DISTANCE, 1.32f, z[i] * PIN_DISTANCE + PIN_OFFSET);
         	this.pins.add(new Pin(pin, originalPos));
