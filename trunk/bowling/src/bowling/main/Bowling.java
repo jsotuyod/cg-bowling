@@ -2,7 +2,10 @@ package bowling.main;
 
 import bowling.audio.AudioManager;
 import bowling.state.BowlingGameState;
+import bowling.state.EndGameMenuState;
+import bowling.state.ExitConfirmationMenuState;
 import bowling.state.MainMenuState;
+import bowling.state.OptionsMenuState;
 
 import com.jme.input.KeyBindingManager;
 import com.jmex.game.state.GameState;
@@ -22,7 +25,9 @@ public class Bowling extends SimplePhysicsGame {
 		GameStateManager.create();
 		
 		this.setUpMainMenu();
-		// TODO : add other game states to the manager
+		this.setUpExitMenu();
+		this.setUpEndGameMenu();
+		this.setUpOptionsMenu();
 		this.setUpGame();
 		
 		this.setUpMusic();
@@ -30,6 +35,30 @@ public class Bowling extends SimplePhysicsGame {
 		this.removeInheritedBindings();
     }
 	
+	/**
+	 * Adds the end game menu state.
+	 */
+	private void setUpEndGameMenu() {
+		GameState menu = EndGameMenuState.getState();
+		GameStateManager.getInstance().attachChild(menu);
+	}
+
+	/**
+	 * Adds the options menu state.
+	 */
+	private void setUpOptionsMenu() {
+		GameState menu = OptionsMenuState.getState();
+		GameStateManager.getInstance().attachChild(menu);
+	}
+
+	/**
+	 * Adds the exit menu game state.
+	 */
+	private void setUpExitMenu() {
+		GameState menu = ExitConfirmationMenuState.getState();
+		GameStateManager.getInstance().attachChild(menu);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.jmex.physics.util.SimplePhysicsGame#preRender()

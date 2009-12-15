@@ -11,7 +11,6 @@ import bowling.menu.MenuItem;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jmex.game.state.GameState;
-import com.jmex.game.state.GameStateManager;
 
 /**
  * The end game menu state
@@ -62,7 +61,6 @@ public class EndGameMenuState {
 				BowlingGameState game = BowlingGameState.getState();
 				game.setInputHandler(inputHandler.getHandler());
 				game.setActive(true);
-				GameStateManager.getInstance().attachChild(game);
 				
 				// Reset the camera
 				BowlingGameState.getState().setupCamera();

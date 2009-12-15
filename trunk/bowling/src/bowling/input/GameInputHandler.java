@@ -46,7 +46,6 @@ public class GameInputHandler {
 				GameState menu = ExitConfirmationMenuState.getState();
 				ExitConfirmationMenuState.setPlaying(true);
 				menu.setActive(true);
-				GameStateManager.getInstance().attachChild(menu);
 			}
 		}, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_ESCAPE, InputHandler.AXIS_NONE, false );
 	}
