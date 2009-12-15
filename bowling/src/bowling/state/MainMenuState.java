@@ -10,7 +10,6 @@ import bowling.menu.MenuItem;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jmex.game.state.GameState;
-import com.jmex.game.state.GameStateManager;
 
 /**
  * The main menu state

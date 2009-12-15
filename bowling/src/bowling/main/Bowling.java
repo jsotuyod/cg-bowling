@@ -109,6 +109,11 @@ public class Bowling extends SimplePhysicsGame {
     
 	private void removeInheritedBindings() {
 		KeyBindingManager.getKeyBindingManager().remove("exit");
+		KeyBindingManager.getKeyBindingManager().remove("camera_out");
+		KeyBindingManager.getKeyBindingManager().remove("toggle_depth");
+		
+		// Make camera still
+		input.removeFromAttachedHandlers(cameraInputHandler);
 	}
     
     /**

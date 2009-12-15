@@ -10,7 +10,6 @@ import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.InputActionInterface;
 import com.jme.scene.Text;
 import com.jmex.game.state.GameState;
-import com.jmex.game.state.GameStateManager;
 
 /**
  * The game input handler
