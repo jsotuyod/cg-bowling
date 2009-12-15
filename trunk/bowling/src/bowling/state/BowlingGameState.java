@@ -22,7 +22,6 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
 import com.jme.system.DisplaySystem;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
@@ -162,17 +161,13 @@ public class BowlingGameState extends PhysicsGameState {
         rootNode.attachChild(ball);
         
         // Set the physic properties
-        final Sphere sphere = new Sphere("ball-geom", 100, 100, 5f);
+        final Sphere sphere = new Sphere("ball-geom", 100, 100, 2.45f);
         ball.attachChild(sphere);
-        ball.setLocalScale(0.1f);
+        ball.setLocalScale(0.204f);
         
         ball.generatePhysicsGeometry();
         ball.setMaterial(MaterialFactory.createMaterial("ball", 20f, 0.05f, 0f));
         ball.computeMass();
-        
-        MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
-        ms.setDiffuse(new ColorRGBA(0.768f, 0.294f, 0.764f, 1));
-        ball.setRenderState(ms);
         
         // Add the model, with no physics, to make it look nice
         AssetManager.getInstance().loadBall(ball, false);
