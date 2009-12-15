@@ -2,7 +2,7 @@
 shader {
 	name "WorldFloor.shader"
 	type diffuse
-	diff { "sRGB nonlinear" 0.000 1.000 0.000 }
+	texture "resources/textures/floor.jpg"
 }
 
 object {
