@@ -204,24 +204,24 @@ public class ScToJme extends FormatConverter {
             normalsVertex = new float[np * 3];
             
             // Area weighted mean of face normals
-            for (int i = 0; i < np * 3; i += 3) {
+            for (int i = 0; i < np; i++) {
             	int j;
-            	Vector3f n = new Vector3f();
+            	Vector3f n = null;
             	Vector3f v1 = null, v2 = null;
             	for (j = 0; j < nt * 3; j += 3) {
             		if (i == indices[j] || i == indices[j+1] || i == indices[j+2]) {
             			v1 = new Vector3f(points[indices[j]]).subtractLocal(points[indices[j+1]]);
             			v2 = new Vector3f(points[indices[j]]).subtractLocal(points[indices[j+2]]);
             			
-            			n.addLocal(v1.crossLocal(v2));
+            			n = v1.cross(v2);
             		}
             	}
             	
             	n.normalizeLocal();
             	
-            	normalsVertex[i] = n.x;
-            	normalsVertex[i+1] = n.y;
-            	normalsVertex[i+2] = n.z;
+            	normalsVertex[i*3] = n.x;
+            	normalsVertex[i*3+1] = n.y;
+            	normalsVertex[i*3+2] = n.z;
             }
         }
         
