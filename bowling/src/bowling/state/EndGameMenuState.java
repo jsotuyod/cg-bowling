@@ -53,25 +53,23 @@ public class EndGameMenuState {
 	private static GameState createState() {
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
 		
-    	menuItems.add(new MenuItem("start_end", "[ENTER] Comenzar nuevamente", new MenuItemListener(KeyInput.KEY_RETURN) {
+    	menuItems.add(new MenuItem("start_end", "Comenzar nuevamente", new MenuItemListener(KeyInput.KEY_RETURN) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					// Hide the main menu, start the game!
-					EndGameMenuState.getState().setActive(false);
-					BowlingGameState game = BowlingGameState.getState();
-					game.setInputHandler(inputHandler.getHandler());
-					game.setActive(true);
-					GameStateManager.getInstance().attachChild(game);
-					
-					// Reset the camera
-					BowlingGameState.getState().setupCamera();
-				}
+				// Hide the main menu, start the game!
+				EndGameMenuState.getState().setActive(false);
+				BowlingGameState game = BowlingGameState.getState();
+				game.setInputHandler(inputHandler.getHandler());
+				game.setActive(true);
+				GameStateManager.getInstance().attachChild(game);
+				
+				// Reset the camera
+				BowlingGameState.getState().setupCamera();
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("exit_end", "[ESC] Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
+    	menuItems.add(new MenuItem("exit_end", "Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {

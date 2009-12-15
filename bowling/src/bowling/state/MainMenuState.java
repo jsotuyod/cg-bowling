@@ -46,35 +46,31 @@ public class MainMenuState {
 	private static GameState createState() {
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
 		
-    	menuItems.add(new MenuItem("start", "[ENTER] Comenzar Juego", new MenuItemListener(KeyInput.KEY_RETURN) {
+    	menuItems.add(new MenuItem("start", "Comenzar Juego", new MenuItemListener(KeyInput.KEY_RETURN) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					// Hide the main menu, start the game!
-					MainMenuState.getState().setActive(false);
-					BowlingGameState.getState().setActive(true);
-					
-					// Reset the camera
-					BowlingGameState.getState().setupCamera();
-				}
+				// Hide the main menu, start the game!
+				MainMenuState.getState().setActive(false);
+				BowlingGameState.getState().setActive(true);
+				
+				// Reset the camera
+				BowlingGameState.getState().setupCamera();
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("options", "[O] Opciones", new MenuItemListener(KeyInput.KEY_O){
+    	menuItems.add(new MenuItem("options", "Opciones", new MenuItemListener(KeyInput.KEY_O){
 
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					MainMenuState.getState().setActive(false);
-					GameState menu = OptionsMenuState.getState();
-					menu.setActive(true);
-					GameStateManager.getInstance().attachChild(menu);
-				}
+				MainMenuState.getState().setActive(false);
+				GameState menu = OptionsMenuState.getState();
+				menu.setActive(true);
+				GameStateManager.getInstance().attachChild(menu);
 			}
     	}));
     	
-    	menuItems.add(new MenuItem("exit", "[ESC] Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
+    	menuItems.add(new MenuItem("exit", "Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
