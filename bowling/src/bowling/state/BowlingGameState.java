@@ -76,13 +76,24 @@ public class BowlingGameState extends PhysicsGameState {
 		this.createFloor();
 		this.createWall();
 		
-		this.resetScene();
-		
 		this.setLights();
 		
 		this.setPowerMeter();
 		this.setDirectionMeter();
 		this.setAngleMeter();
+		
+		this.reset();
+		
+		// Make sure everything renders properly
+		rootNode.updateGeometricState(0, true);
+		rootNode.updateRenderState();
+	}
+
+	/**
+	 * Resets the game state.
+	 */
+	public void reset() {
+		this.resetScene();
 		
 		// TODO : Make this seteable from a menu?
 		this.playerScore = new Score("Juan");
@@ -90,10 +101,6 @@ public class BowlingGameState extends PhysicsGameState {
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
 		this.firstFrame = false;
-		
-		// Make sure everything renders properly
-		rootNode.updateGeometricState(0, true);
-		rootNode.updateRenderState();
 	}
 
 	/**
@@ -465,5 +472,6 @@ public class BowlingGameState extends PhysicsGameState {
     	GameState menu = EndGameMenuState.getState();
 		EndGameMenuState.setInputHandler(inputHandler);
 		menu.setActive(true);
+		this.reset();
 	}
 }
