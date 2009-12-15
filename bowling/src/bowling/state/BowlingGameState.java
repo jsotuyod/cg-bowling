@@ -137,12 +137,12 @@ public class BowlingGameState extends PhysicsGameState {
 	/**
 	 * Sets the pins in their correct positions for a new throw.
 	 */
-	public void resetPins(){
+	private void resetPins(){
 
     	for ( int i = 0; i < PIN_COUNT; i++ ) {
     		
     		Pin pin = this.pins.get(i);
-    		pin.place();
+    		pin.reset();
     	}
     }
 
@@ -468,7 +468,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 * Adds the finish menu game state.
 	 */
     private void setUpEndGameMenu() {
-    	BowlingGameState.getState().setActive(false);
+    	this.setActive(false);
     	GameState menu = EndGameMenuState.getState();
 		EndGameMenuState.setInputHandler(inputHandler);
 		menu.setActive(true);
