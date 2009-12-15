@@ -24,7 +24,6 @@ import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
 import com.jmex.game.state.GameState;
-import com.jmex.game.state.GameStateManager;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.material.Material;
