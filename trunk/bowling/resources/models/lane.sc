@@ -93,9 +93,8 @@ object {
 object {
 	transform {
 		scalex 13
-		scaley 4
-		scalez 4
-		translate 0 1.5 41
+		scaley 5
+		translate 0 2.5 38.8
 	}
 	shader "Gutter.shader"
 	type box

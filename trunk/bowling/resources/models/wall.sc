@@ -2,7 +2,7 @@
 shader {
 	name "WorldWall.shader"
 	type diffuse
-	diff { "sRGB nonlinear" 1.000 0.000 0.000 }
+	texture "resources/textures/bricks.jpg"
 }
 
 object {
