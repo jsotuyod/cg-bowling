@@ -24,7 +24,7 @@ import com.jmex.game.state.BasicGameState;
  */
 public class Menu extends BasicGameState {
 
-	private static final float FONT_SCALE = 4;
+	private static final float FONT_SCALE = 2;
 	private static final float SPACE_BETWEEN_ITEMS = 50;
 
 	protected DisplaySystem display;

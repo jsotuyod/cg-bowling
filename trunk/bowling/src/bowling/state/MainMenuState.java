@@ -10,6 +10,7 @@ import bowling.menu.MenuItem;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jmex.game.state.GameState;
+import com.jmex.game.state.GameStateManager;
 
 /**
  * The main menu state
@@ -45,26 +46,42 @@ public class MainMenuState {
 	private static GameState createState() {
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
 		
-    	menuItems.add(new MenuItem("start", "Comenzar Juego", new MenuItemListener(KeyInput.KEY_RETURN) {
+    	menuItems.add(new MenuItem("start", "[ENTER] Comenzar Juego", new MenuItemListener(KeyInput.KEY_RETURN) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				// Hide the main menu, start the game!
-				MainMenuState.getState().setActive(false);
-				BowlingGameState.getState().setActive(true);
-				
-				// Reset the camera
-				BowlingGameState.getState().setupCamera();
+				if(evt.getTriggerPressed()){
+					// Hide the main menu, start the game!
+					MainMenuState.getState().setActive(false);
+					BowlingGameState.getState().setActive(true);
+					
+					// Reset the camera
+					BowlingGameState.getState().setupCamera();
+				}
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("options", "Opciones", null));
+    	menuItems.add(new MenuItem("options", "[O] Opciones", new MenuItemListener(KeyInput.KEY_O){
+
+			@Override
+			public void performAction(InputActionEvent evt) {
+				if(evt.getTriggerPressed()){
+					MainMenuState.getState().setActive(false);
+					GameState menu = OptionsMenuState.getState();
+					menu.setActive(true);
+					GameStateManager.getInstance().attachChild(menu);
+				}
+			}
+    	}));
     	
-    	menuItems.add(new MenuItem("exit", "Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
+    	menuItems.add(new MenuItem("exit", "[ESC] Salir", new MenuItemListener(KeyInput.KEY_ESCAPE) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				System.exit(0);
+				MainMenuState.getState().setActive(false);
+				GameState menu = ExitConfirmationMenuState.getState();
+				menu.setActive(true);
+				GameStateManager.getInstance().attachChild(menu);
 			}
 		}));
 		

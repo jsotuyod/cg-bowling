@@ -61,8 +61,8 @@ public class AudioManager{
 
 	private void setKeyBindings() {
 		KeyBindingManager.getKeyBindingManager().set("PREVIOUS_TRACK", KeyInput.KEY_J);
-		KeyBindingManager.getKeyBindingManager().set("NEXT_TRACK", KeyInput.KEY_K);
-		KeyBindingManager.getKeyBindingManager().set("MUTE", KeyInput.KEY_M);
+		KeyBindingManager.getKeyBindingManager().set("NEXT_TRACK", KeyInput.KEY_U);
+		KeyBindingManager.getKeyBindingManager().set("MUTE", KeyInput.KEY_K);
 	}
 
 	private AudioTrack getMusicFromURL(URL musicURL) {
