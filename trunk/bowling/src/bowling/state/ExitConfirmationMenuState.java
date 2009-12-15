@@ -60,29 +60,25 @@ public class ExitConfirmationMenuState {
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("yes", "[Y] Si", new MenuItemListener(KeyInput.KEY_Y) {
+    	menuItems.add(new MenuItem("yes", "Si", new MenuItemListener(KeyInput.KEY_Y) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					System.exit(0);
-				}
+				System.exit(0);
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("back", "[N] No", new MenuItemListener(KeyInput.KEY_N) {
+    	menuItems.add(new MenuItem("back", "No", new MenuItemListener(KeyInput.KEY_N) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					ExitConfirmationMenuState.getState().setActive(false);
-					if(isPlaying){
-						BowlingGameState.getState().setActive(true);
-					}else{
-						GameState menu = MainMenuState.getState();
-						menu.setActive(true);
-						GameStateManager.getInstance().attachChild(menu);
-					}
+				ExitConfirmationMenuState.getState().setActive(false);
+				if(isPlaying){
+					BowlingGameState.getState().setActive(true);
+				}else{
+					GameState menu = MainMenuState.getState();
+					menu.setActive(true);
+					GameStateManager.getInstance().attachChild(menu);
 				}
 			}
 		}));

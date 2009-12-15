@@ -53,8 +53,11 @@ public class OptionsMenuState {
 			
 			@Override
 			public void performAction(InputActionEvent evt){
-				if(evt.getTriggerPressed()){
-					gameAudioManager.toggleBackgroundMusic();
+				// TODO: ver como hacerlo andar con mouse
+				if(!evt.getTriggerDevice().equals("mouse")){
+					if(evt.getTriggerPressed()){
+						gameAudioManager.toggleBackgroundMusic();
+					}
 				}
 			}
 		}));
@@ -63,21 +66,22 @@ public class OptionsMenuState {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					gameAudioManager.toggleBowlingSound();
+				// TODO: ver como hacerlo andar con mouse
+				if(!evt.getTriggerDevice().equals("mouse")){
+					if(evt.getTriggerPressed()){
+						gameAudioManager.toggleBackgroundMusic();
+					}
 				}
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("back", "[V] Volver al menu principal", new MenuItemListener(KeyInput.KEY_V) {
+    	menuItems.add(new MenuItem("back", "Volver al menu principal", new MenuItemListener(KeyInput.KEY_V) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				if(evt.getTriggerPressed()){
-					// Hide the options menu, go back to the main menu
-					OptionsMenuState.getState().setActive(false);
-					MainMenuState.getState().setActive(true);
-				}
+				// Hide the options menu, go back to the main menu
+				OptionsMenuState.getState().setActive(false);
+				MainMenuState.getState().setActive(true);
 			}
 		}));
 		
