@@ -23,6 +23,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
+import com.jmex.game.state.GameState;
+import com.jmex.game.state.GameStateManager;
 import com.jmex.physics.DynamicPhysicsNode;
 import com.jmex.physics.StaticPhysicsNode;
 import com.jmex.physics.material.Material;
@@ -231,7 +233,7 @@ public class BowlingGameState extends PhysicsGameState {
         	pin.setLocalScale(0.25f);
         	pin.setMaterial(Material.WOOD);
         	pin.computeMass();
-        	pin.setMass(10.0f);
+        	pin.setMass(5.0f);
         	
         	Vector3f originalPos = new Vector3f(x[i] * PIN_DISTANCE, 1.32f, z[i] * PIN_DISTANCE + PIN_OFFSET);
         	this.pins.add(new Pin(pin, originalPos));
@@ -386,7 +388,7 @@ public class BowlingGameState extends PhysicsGameState {
 			break;
 			
 		case GAME_ENDED:
-			// TODO : Display final score. Change gamestate maybe?
+			setUpEndGameMenu();
 			break;
 		}
 		
@@ -411,6 +413,7 @@ public class BowlingGameState extends PhysicsGameState {
 		powermeter.render(tpf);
 		directionmeter.render(tpf);
 		anglemeter.render(tpf);
+		
 	}
 
 	/**
@@ -453,5 +456,17 @@ public class BowlingGameState extends PhysicsGameState {
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * Adds the finish menu game state.
+	 */
+    private void setUpEndGameMenu() {
+    	BowlingGameState.getState().setActive(false);
+    	GameState menu = EndGameMenuState.getState();
+		EndGameMenuState.setInputHandler(inputHandler);
+		menu.setActive(true);
+		GameStateManager.getInstance().attachChild(menu);
+		state = null;
 	}
 }

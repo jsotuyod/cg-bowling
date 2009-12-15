@@ -1,6 +1,7 @@
 package bowling.input;
 
 import bowling.state.BowlingGameState;
+import bowling.state.ExitConfirmationMenuState;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
@@ -8,6 +9,8 @@ import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.InputActionInterface;
 import com.jme.scene.Text;
+import com.jmex.game.state.GameState;
+import com.jmex.game.state.GameStateManager;
 
 /**
  * The game input handler
@@ -37,6 +40,15 @@ public class GameInputHandler {
 		this.barStopedAction = new BarStopedAction(target);
 		
 		input.addAction(this.barStopedAction, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_SPACE, InputHandler.AXIS_NONE, false );
+		input.addAction(new InputAction(){
+			@Override
+			public void performAction(InputActionEvent evt) {
+				GameState menu = ExitConfirmationMenuState.getState();
+				ExitConfirmationMenuState.setPlaying(true);
+				menu.setActive(true);
+				GameStateManager.getInstance().attachChild(menu);
+			}
+		}, InputHandler.DEVICE_KEYBOARD, KeyInput.KEY_ESCAPE, InputHandler.AXIS_NONE, false );
 	}
 	
 	/**
@@ -53,6 +65,10 @@ public class GameInputHandler {
         label.setLocalTranslation( 0, 20, 0 );
         
         return label;
+	}
+	
+	public InputHandler getHandler(){
+		return input;
 	}
 	
 	/**

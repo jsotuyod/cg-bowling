@@ -4,13 +4,14 @@ import bowling.audio.AudioManager;
 import bowling.state.BowlingGameState;
 import bowling.state.MainMenuState;
 
+import com.jme.input.KeyBindingManager;
 import com.jmex.game.state.GameState;
 import com.jmex.game.state.GameStateManager;
 import com.jmex.physics.util.SimplePhysicsGame;
 
 public class Bowling extends SimplePhysicsGame {
 
-	private AudioManager audioManager = new AudioManager();
+	private static AudioManager audioManager = new AudioManager();
 	
 	/**
 	 * Init routine for the game.
@@ -25,6 +26,8 @@ public class Bowling extends SimplePhysicsGame {
 		this.setUpGame();
 		
 		this.setUpMusic();
+		
+		this.removeInheritedBindings();
     }
 	
 	/*
@@ -67,6 +70,18 @@ public class Bowling extends SimplePhysicsGame {
     	audioManager.updateMusicState();
     }
 
+    /**
+     * Game audio manager singleton instance
+     * @return {@link AudioManager} instance
+     */
+    public static AudioManager getGameAudioManager(){
+    	return audioManager;
+    }
+    
+	private void removeInheritedBindings() {
+		KeyBindingManager.getKeyBindingManager().remove("exit");
+	}
+    
     /**
      * The main method to allow starting this class as application.
      * @param args command line arguments
