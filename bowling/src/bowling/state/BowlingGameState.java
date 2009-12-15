@@ -466,7 +466,6 @@ public class BowlingGameState extends PhysicsGameState {
     	GameState menu = EndGameMenuState.getState();
 		EndGameMenuState.setInputHandler(inputHandler);
 		menu.setActive(true);
-		GameStateManager.getInstance().attachChild(menu);
 		state = null;
 	}
 }

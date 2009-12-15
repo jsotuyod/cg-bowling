@@ -123,7 +123,7 @@ public class Menu extends BasicGameState {
 		
 		/**
 		 * Creates a new mouse selector for menu items.
-		 * @param listener The listener fot he menu item.
+		 * @param listener The listener for the menu item.
 		 * @param textNode The text node for the item.
 		 */
 		public MouseItemSelector(MenuItemListener listener, Text textNode) {

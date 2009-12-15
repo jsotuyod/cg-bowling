@@ -66,7 +66,6 @@ public class MainMenuState {
 				MainMenuState.getState().setActive(false);
 				GameState menu = OptionsMenuState.getState();
 				menu.setActive(true);
-				GameStateManager.getInstance().attachChild(menu);
 			}
     	}));
     	
@@ -77,7 +76,6 @@ public class MainMenuState {
 				MainMenuState.getState().setActive(false);
 				GameState menu = ExitConfirmationMenuState.getState();
 				menu.setActive(true);
-				GameStateManager.getInstance().attachChild(menu);
 			}
 		}));
 		

@@ -10,7 +10,6 @@ import bowling.menu.MenuItem;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jmex.game.state.GameState;
-import com.jmex.game.state.GameStateManager;
 
 /**
  * The exit confirmation menu state
@@ -78,7 +77,6 @@ public class ExitConfirmationMenuState {
 				}else{
 					GameState menu = MainMenuState.getState();
 					menu.setActive(true);
-					GameStateManager.getInstance().attachChild(menu);
 				}
 			}
 		}));
