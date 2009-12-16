@@ -42,6 +42,8 @@ public class BowlingGameState extends PhysicsGameState {
 	final private static float PIN_OFFSET = 30f;
 
 	private static final int LANE_LIMIT = 8;
+
+	private static final float MAX_TIME_AFTER_BALL_STOPPED = 5;
 	
 	
 	private static BowlingGameState state;
@@ -63,6 +65,9 @@ public class BowlingGameState extends PhysicsGameState {
 	private boolean firstFrame;
 	
 	private String userName;
+	
+	private float timeSinceBallStopped;
+	private boolean ballStopped;
 	
 	/**
 	 * Creates a new bowling game state.
@@ -124,6 +129,9 @@ public class BowlingGameState extends PhysicsGameState {
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
 		this.firstFrame = false;
+		
+		this.ballStopped = false;
+		this.timeSinceBallStopped = 0;
 	}
 
 	/**
@@ -374,6 +382,8 @@ public class BowlingGameState extends PhysicsGameState {
 			
 			// Check if the throw is over
 			if (ball.hasStopped()) {
+				ballStopped = true;
+				
 				for (Pin pin : this.pins) {
 					if (!pin.hasStopped()) {
 						stopped = false;
@@ -383,10 +393,22 @@ public class BowlingGameState extends PhysicsGameState {
 				stopped = false;
 			}
 			
+			if (ballStopped) {
+				timeSinceBallStopped += tpf;
+				
+				// Set a time limit for stopping while waiting for the pins
+				if (timeSinceBallStopped >= MAX_TIME_AFTER_BALL_STOPPED) {
+					stopped = true;
+				}
+			}
+			
 			if (stopped) {
 				int pinsDown = pinsDown();
 				
 				this.throwFinished(pinsDown);
+				
+				ballStopped = false;
+				timeSinceBallStopped = 0;
 			}
 		}
 		
