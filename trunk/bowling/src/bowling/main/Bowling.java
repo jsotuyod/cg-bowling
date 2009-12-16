@@ -34,7 +34,7 @@ public class Bowling extends SimplePhysicsGame {
 		
 		this.removeInheritedBindings();
     }
-	
+
 	/**
 	 * Adds the end game menu state.
 	 */
