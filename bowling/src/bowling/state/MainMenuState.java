@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bowling.input.MenuItemListener;
-import bowling.logic.score.Board;
 import bowling.menu.Menu;
 import bowling.menu.MenuItem;
 
@@ -53,7 +52,6 @@ public class MainMenuState {
 				// Hide the main menu, start the game!
 				MainMenuState.getState().setActive(false);
 				BowlingGameState.getState().setActive(true);
-				Board.setEnabled(true);
 				
 				// Reset the camera
 				BowlingGameState.getState().setupCamera();

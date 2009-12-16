@@ -11,7 +11,6 @@ import bowling.logic.domain.DirectionMeter;
 import bowling.logic.domain.Pin;
 import bowling.logic.domain.PowerMeter;
 import bowling.logic.domain.ThrowPhase;
-import bowling.logic.score.Score;
 import bowling.logic.score.Board;
 import bowling.utils.MaterialFactory;
 
@@ -61,11 +60,15 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	private boolean firstFrame;
 	
+	private String userName;
+	
 	/**
 	 * Creates a new bowling game state.
 	 */
 	private BowlingGameState() {
 		super("bowling game");
+		
+		this.userName = "Player 1";
 		
 		// Position camera
 		this.setupCamera();
@@ -76,6 +79,7 @@ public class BowlingGameState extends PhysicsGameState {
 		this.createBowlingBall();
 		this.createFloor();
 		this.createWall();
+		this.createScoreBoard();
 		
 		this.setLights();
 		
@@ -83,7 +87,7 @@ public class BowlingGameState extends PhysicsGameState {
 		this.setDirectionMeter();
 		this.setAngleMeter();
 		
-		this.reset();
+		this.reset(this.userName);
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -91,14 +95,29 @@ public class BowlingGameState extends PhysicsGameState {
 	}
 
 	/**
+	 * Creates the score board.
+	 */
+	private void createScoreBoard() {
+		this.scoreBoard = new Board(this.userName);
+	}
+	
+	/**
+	 * Set's the user name. Reset's the game.
+	 * @param value The new user name.
+	 */
+	public void setUserName(String value) {
+		this.userName = value;
+		
+		this.reset(this.userName);
+	}
+
+	/**
 	 * Resets the game state.
 	 */
-	public void reset() {
+	public void reset(String userName) {
 		this.resetScene();
 		
-		// TODO : Make this seteable from a menu?
-	
-		this.scoreBoard = new Board();
+		this.scoreBoard.reset(userName);
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
@@ -371,6 +390,8 @@ public class BowlingGameState extends PhysicsGameState {
 		}
 		
 		this.firstFrame = false;
+		
+		scoreBoard.update(tpf);
 	}
 	
 	/**
@@ -421,7 +442,7 @@ public class BowlingGameState extends PhysicsGameState {
 		powermeter.render(tpf);
 		directionmeter.render(tpf);
 		anglemeter.render(tpf);
-		
+		scoreBoard.render(tpf);
 	}
 
 	/**
@@ -470,7 +491,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 * Adds the finish menu game state.
 	 */
     private void setUpEndGameMenu() {
-    	this.reset();
+    	this.reset(this.userName);
 		this.setActive(false);
 		
     	GameState menu = EndGameMenuState.getState();

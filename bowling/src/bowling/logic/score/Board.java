@@ -1,84 +1,60 @@
 package bowling.logic.score;
 
+import com.jme.renderer.Renderer;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.Text;
-import com.jmex.game.state.DebugGameState;
-import com.jmex.game.state.GameStateManager;
+import com.jme.system.DisplaySystem;
 
 public class Board {
 
+	private Node scoreNode;
 	private Score player1Score;
-	private static DebugGameState gameState;
 
-	private Text line1;
-
-
-
-	public Board() {
+	public Board(String userName) {
 		
-		this.player1Score = new Score("Player 1");
+		this.scoreNode = new Node("score node");
 		
-		gameState = new DebugGameState();
-		GameStateManager.getInstance().attachChild(gameState);
+		this.reset(userName);
 		
-		refreshText();
+		this.scoreNode.setLightCombineMode(Spatial.LightCombineMode.Off);
+		this.scoreNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		this.scoreNode.updateRenderState();
+		this.scoreNode.updateGeometricState(0, true);
 	}
 	
-	private void refreshText() {
+	public void refreshText() {
 		
-		Text nameLine = player1Score.getNameLine();
-		if (nameLine != null) {
-			gameState.getRootNode().detachChild(nameLine);	
-		}
+		this.scoreNode.detachAllChildren();
+		
 		player1Score.calcNameLine();
-		nameLine = player1Score.getNameLine();
-		gameState.getRootNode().attachChild(nameLine);
+		Text nameLine = player1Score.getNameLine();
 		
-		Text[] firstLine = player1Score.getFirstLine();
+		this.scoreNode.attachChild(nameLine);
 		
-		if (firstLine != null) {
-			for (Text line : firstLine) {
-				if (line != null) {
-					gameState.getRootNode().detachChild(line);
-				}
-			}
-		}
 		player1Score.calcFirstLine();
-		firstLine = player1Score.getFirstLine();
+		Text[] firstLine = player1Score.getFirstLine();
 		for (Text line : firstLine) {
-			gameState.getRootNode().attachChild(line);	
+			this.scoreNode.attachChild(line);	
 		}
 		
-		Text[] secondLine = player1Score.getSecondLine();
-		if (secondLine != null) {
-			for (Text line : secondLine) {
-				if (line != null) {
-					gameState.getRootNode().detachChild(line);
-				}
-			}
-		}
 		player1Score.calcSecondLine();
-		secondLine = player1Score.getSecondLine();
+		Text[] secondLine = player1Score.getSecondLine();
 		for (Text line : secondLine) {
-			gameState.getRootNode().attachChild(line);	
+			this.scoreNode.attachChild(line);	
 		}
 		
-		Text[] thirdLine = player1Score.getThirdLine();
-		if (thirdLine != null) {
-			for (Text line : thirdLine) {
-				if (line != null) {
-					gameState.getRootNode().detachChild(line);
-				}
-			}
-		}
 		player1Score.calcThirdLine();
-		thirdLine = player1Score.getThirdLine();
+		Text[] thirdLine = player1Score.getThirdLine();
 		for (Text line : thirdLine) {
-			gameState.getRootNode().attachChild(line);	
+			this.scoreNode.attachChild(line);
 		}
 		
+		this.scoreNode.updateRenderState();
 	}
-	public static void setEnabled (boolean flag) {
-		gameState.setActive(flag);	
+	
+	public void update(float tpf) {
+		this.scoreNode.updateGeometricState(tpf, true);
 	}
 	
 	public PinsAction score(int pinsDown) {
@@ -86,5 +62,18 @@ public class Board {
 		refreshText();
 		return p;
 	}
-	
+
+	/**
+	 * Resets the score board.
+	 * @param userName The name of the user whose score is being kept track of.
+	 */
+	public void reset(String userName) {
+		this.player1Score = new Score(userName);
+		
+		refreshText();
+	}
+
+	public void render(float tpf) {
+		DisplaySystem.getDisplaySystem().getRenderer().draw(this.scoreNode);
+	}
 }
