@@ -89,6 +89,9 @@ public class Menu extends BasicGameState {
 	            	input.addAction(new MouseItemSelector(listener, (Text) rootNode.getChild(menuItem.name)));
 	            }
 			}
+			
+			// Reset mouse handling
+			mouse.registerWithInputHandler(input);
 		} else {
 			// Remove all listeners!
 			input.removeAllActions();
