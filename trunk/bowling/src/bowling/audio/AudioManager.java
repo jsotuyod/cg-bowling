@@ -45,7 +45,6 @@ public class AudioManager{
 			ballShotSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/ball.ogg"), true);
 			ballShotSound.setLooping(true);
 			pinsSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/pins.ogg"), true);
-			pinsSound.setLooping(true);
 			gutterSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/gutter.ogg"), true);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
