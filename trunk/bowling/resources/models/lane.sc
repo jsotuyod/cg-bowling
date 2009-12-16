@@ -8,6 +8,12 @@ shader {
 shader {
 	name "Gutter.shader"
 	type diffuse
+	texture "resources/textures/gutter.jpg"
+}
+
+shader {
+	name "BackWall.shader"
+	type diffuse
 	diff { "sRGB nonlinear" 0.200 0.200 0.200 }
 }
 
@@ -61,9 +67,9 @@ object {
 		scalez 5
 		translate 0 -0.25 37.5
 	}
-	shader "Gutter.shader"
+	shader "BackWall.shader"
 	type box
-	name "backGutter"
+	name "backWallFloor"
 }
 
 object {
@@ -96,7 +102,7 @@ object {
 		scaley 5
 		translate 0 2.5 38.8
 	}
-	shader "Gutter.shader"
+	shader "BackWall.shader"
 	type box
 	name "backWall"
 }
