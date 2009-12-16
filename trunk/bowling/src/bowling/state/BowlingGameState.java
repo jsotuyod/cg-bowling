@@ -12,6 +12,7 @@ import bowling.logic.domain.Pin;
 import bowling.logic.domain.PowerMeter;
 import bowling.logic.domain.ThrowPhase;
 import bowling.logic.score.Score;
+import bowling.logic.score.Board;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -47,7 +48,7 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	private GameInputHandler inputHandler;
 	
-	private Score playerScore;
+	private Board scoreBoard;
 	
 	private Ball ball;
 	private List<Pin> pins;
@@ -96,7 +97,8 @@ public class BowlingGameState extends PhysicsGameState {
 		this.resetScene();
 		
 		// TODO : Make this seteable from a menu?
-		this.playerScore = new Score("Juan");
+	
+		this.scoreBoard = new Board();
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
@@ -376,7 +378,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 * @param pinsDown The number of pins thrown in this ball throw.
 	 */
 	private void throwFinished(int pinsDown) {
-		switch (this.playerScore.score(pinsDown)) {
+		switch (this.scoreBoard.score(pinsDown)) {
 		case DO_NOTHING:
 			// Remove fallen pins, set everything ready for next throw
 			for (Pin pin : this.pins) {
