@@ -44,12 +44,12 @@ public class Point {
 		}
 		else {
 			str.append(valueToStr(this.getFirstShootValue()));
-			str.append(" | ");
+			str.append(" ");
 			str.append(valueToStr(this.getSecondShootValue()));
 		}
-		if (this.getSubTotalValue() != 0) {
+		/*if (this.getSubTotalValue() != 0) {
 			str.append(" Subtotal: " + this.getSubTotalValue());
-		}
+		}*/
 		return (str.toString());
 	}
 		
