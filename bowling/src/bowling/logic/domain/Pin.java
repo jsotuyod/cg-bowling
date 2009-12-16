@@ -13,6 +13,8 @@ public class Pin {
 	private static final float VELOCITY_THRESHOLD = 0.5f;
 
 	private static final float POSITION_THRESHOLD = 0.01f;
+
+	private static final float ANGLE_THRESHOLD = 0.2f;
 	
 	
 	protected Node parent;
@@ -68,7 +70,14 @@ public class Pin {
 	 * @return True if the pin has fallen, false otherwise.
 	 */
 	public boolean isFallen() {
+		// Check position
 		if (node.getLocalTranslation().y < originalPos.y - POSITION_THRESHOLD) {
+			return true;
+		}
+		
+		// Check pitch
+		float[] angles = node.getLocalRotation().toAngles(null);
+		if (angles[2] > ANGLE_THRESHOLD) {
 			return true;
 		}
 		
