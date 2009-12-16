@@ -25,11 +25,13 @@ public class AudioManager{
 	private AudioSystem audioSystem;
 
 	private AudioTrack ballShotSound;
+	
+	private AudioTrack pinsSound;
 	private AudioTrack gutterSound;
 
 	public AudioManager() {
 		this.audioSystem = AudioSystem.getSystem();
-
+		
 		setBowlingSounds();
 
 		setBackGroundMusic();
@@ -40,7 +42,10 @@ public class AudioManager{
 	private void setBowlingSounds() {
 		// Set bowling sounds
 		try {
-			ballShotSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/ballshot.ogg"), true);
+			ballShotSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/ball.ogg"), true);
+			ballShotSound.setLooping(true);
+			pinsSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/pins.ogg"), true);
+			pinsSound.setLooping(true);
 			gutterSound = AudioSystem.getSystem().createAudioTrack(new URL("file:resources/audio/gutter.ogg"), true);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -70,7 +75,7 @@ public class AudioManager{
 				true);
 		audioTrack.setType(TrackType.MUSIC);
 		audioTrack.setRelative(true);
-		audioTrack.setTargetVolume(1f);
+		audioTrack.setTargetVolume(.5f);
 		audioTrack.setLooping(false);
 		return audioTrack;
 	}
@@ -113,7 +118,24 @@ public class AudioManager{
 	 */
 	public void playBallShotSound() {
 		if (enableBowlingSound) {
-			ballShotSound.play();
+			if(!ballShotSound.isPlaying()){
+				ballShotSound.play();
+			}else {
+				ballShotSound.setVolume(1.0f);
+			}
+		}
+	}
+	
+	/**
+	 * Make the pins sound
+	 */
+	public void playPinsSound(int pinsUp) {
+		if (enableBowlingSound) {
+			if(!pinsSound.isPlaying()){
+				pinsSound.play();
+			}else{
+				pinsSound.setVolume(pinsUp/10.0f);
+			}
 		}
 	}
 	
@@ -122,7 +144,24 @@ public class AudioManager{
 	 */
 	public void playGutterSound() {
 		if (enableBowlingSound) {
-			gutterSound.play();
+			if(!gutterSound.isPlaying()){
+				gutterSound.play();
+			}
+		}
+	}
+	
+	/**
+	 * Stop all sound effects
+	 */
+	public void stopAllSounds(){
+		if(enableBowlingSound){
+			if(ballShotSound.isPlaying()){
+				ballShotSound.mute();
+			}
+			if(pinsSound.isPlaying()){
+				pinsSound.mute();
+			}
+			gutterSound.stop();
 		}
 	}
 
