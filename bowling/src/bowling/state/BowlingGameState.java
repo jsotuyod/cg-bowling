@@ -361,7 +361,7 @@ public class BowlingGameState extends PhysicsGameState {
 				int pinsDown = 0;
 				
 				for (Pin pin : this.pins) {
-					if (pin.isFallen()) {
+					if (pin.isOnScene() && pin.isFallen()) {
 						pinsDown++;
 					}
 				}
