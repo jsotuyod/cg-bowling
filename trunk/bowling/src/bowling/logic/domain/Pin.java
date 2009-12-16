@@ -76,6 +76,14 @@ public class Pin {
 	}
 	
 	/**
+	 * Checks if the pin is on the scene or not.
+	 * @return True if the pin is on the scene, false otherwise.
+	 */
+	public boolean isOnScene() {
+		return (this.node.getParent() != null);
+	}
+	
+	/**
 	 * Checks if the pin has stopped moving.
 	 * @return True if the pin has stopped moving, false otherwise.
 	 */
