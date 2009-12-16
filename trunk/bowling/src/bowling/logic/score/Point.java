@@ -8,7 +8,8 @@ public class Point {
 	public static final int STRIKE = 12;
 	
 	protected static final int EMPTY_SLOT = -1;
-
+	protected static final int EMPTY_THIRD_SHOOT_SLOT = -2;
+	
 	protected static final int X = 0;
 	protected static final int Y = 1;
 	
@@ -18,7 +19,12 @@ public class Point {
 		this.values = new int[LabelType.values().length];
 		
 		for (int i = 0; i < LabelType.values().length; i++) {
-			this.values[i] = EMPTY_SLOT;
+			if (i != LabelType.THIRD_SHOOT.ordinal()) {
+				this.values[i] = EMPTY_SLOT;
+			}
+			else {
+				this.values[i] = EMPTY_THIRD_SHOOT_SLOT;
+			}
 		}
 		
 	}
@@ -31,7 +37,10 @@ public class Point {
 			return "/";
 		} else if (value == STRIKE) {
 			return "X";
-		} else {
+		} else if (value == EMPTY_THIRD_SHOOT_SLOT) {
+			return "";
+		}		
+		else {
 			return new Integer(value).toString();
 		}
 	}
@@ -39,13 +48,33 @@ public class Point {
 	@Override
 	public String toString() {
 		StringBuffer str = new StringBuffer();
-		if (this.getSecondShootValue() == STRIKE) {
-			str.append(valueToStr(getSecondShootValue()));
+		if (this.getFirstShootValue() == STRIKE) {
+			str.append(valueToStr(getFirstShootValue()));
+			str.append(" ");
+			if (this.getSecondShootValue() == STRIKE) {
+				str.append(valueToStr(getSecondShootValue()));
+			}
+			else {
+				str.append(valueToStr(this.getSecondShootValue()));
+				if (this.getThirdShootValue() != EMPTY_THIRD_SHOOT_SLOT) {
+					str.append(" ");
+					str.append(valueToStr(this.getThirdShootValue()));
+				}
+			}
 		}
 		else {
-			str.append(valueToStr(this.getFirstShootValue()));
-			str.append(" ");
-			str.append(valueToStr(this.getSecondShootValue()));
+			if (this.getSecondShootValue() == STRIKE) {
+				str.append(valueToStr(getSecondShootValue()));
+			}
+			else {
+				str.append(valueToStr(this.getFirstShootValue()));
+				str.append(" ");
+				str.append(valueToStr(this.getSecondShootValue()));
+				if (this.getThirdShootValue() != EMPTY_THIRD_SHOOT_SLOT) {
+					str.append(" ");
+					str.append(valueToStr(this.getThirdShootValue()));
+				}
+			}
 		}
 		/*if (this.getSubTotalValue() != 0) {
 			str.append(" Subtotal: " + this.getSubTotalValue());
@@ -75,6 +104,16 @@ public class Point {
 		return value;
 	}
 
+	public int getThirdShootValue() {
+		int value = this.values[LabelType.THIRD_SHOOT.ordinal()];
+		
+		if (value == EMPTY_SLOT) {
+			return 0;
+		}
+		
+		return value;
+	}
+	
 	public int getSubTotalValue() {
 		int value = this.values[LabelType.SUBTOTAL.ordinal()];
 		
