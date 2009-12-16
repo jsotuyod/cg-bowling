@@ -20,7 +20,7 @@ shader {
 shader {
 	name "Wall.shader"
 	type diffuse
-	diff { "sRGB nonlinear" 0.000 0.000 1.000 }
+	texture "resources/textures/wall.jpg"
 }
 
 object {
