@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bowling.asset.AssetManager;
+import bowling.audio.AudioManager;
 import bowling.input.GameInputHandler;
 import bowling.logic.domain.AngleMeter;
 import bowling.logic.domain.Ball;
@@ -12,6 +13,7 @@ import bowling.logic.domain.Pin;
 import bowling.logic.domain.PowerMeter;
 import bowling.logic.domain.ThrowPhase;
 import bowling.logic.score.Board;
+import bowling.main.Bowling;
 import bowling.utils.MaterialFactory;
 
 import com.jme.input.InputHandler;
@@ -362,6 +364,11 @@ public class BowlingGameState extends PhysicsGameState {
 			this.throwFinished(0);
 		}
 		
+		//Sound effects
+		if(Bowling.getGameAudioManager().isEnableBowlingSound()){
+			soundEffects();
+		}
+		
 		if (!this.firstFrame && currentPhase == ThrowPhase.IN_PROGRESS) {
 			boolean stopped = true;
 			
@@ -377,13 +384,7 @@ public class BowlingGameState extends PhysicsGameState {
 			}
 			
 			if (stopped) {
-				int pinsDown = 0;
-				
-				for (Pin pin : this.pins) {
-					if (pin.isOnScene() && pin.isFallen()) {
-						pinsDown++;
-					}
-				}
+				int pinsDown = pinsDown();
 				
 				this.throwFinished(pinsDown);
 			}
@@ -392,6 +393,17 @@ public class BowlingGameState extends PhysicsGameState {
 		this.firstFrame = false;
 		
 		scoreBoard.update(tpf);
+	}
+
+	private int pinsDown() {
+		int pinsDown = 0;
+		
+		for (Pin pin : this.pins) {
+			if (pin.isOnScene() && pin.isFallen()) {
+				pinsDown++;
+			}
+		}
+		return pinsDown;
 	}
 	
 	/**
@@ -485,6 +497,39 @@ public class BowlingGameState extends PhysicsGameState {
 		default:
 			break;
 		}
+	}
+	
+	private void soundEffects(){
+		Vector3f ballPos = this.ball.getNode().getLocalTranslation();
+		
+		AudioManager gameAudioManager = Bowling.getGameAudioManager();
+		
+		boolean hasStopped = this.ball.hasStopped();
+
+		// ball sound
+		if( (!hasStopped && 
+				(ballPos.x > -5 && ballPos.x < 5 && ballPos.z < 25
+						&& ballPos.y < 1)) ){
+			gameAudioManager.playBallShotSound();
+		}
+		
+		// pins sound
+		if(!hasStopped 
+				&& ballPos.z > 30 && ballPos.z < 31
+				&& ballPos.x > -3 && ballPos.x < 3){
+			gameAudioManager.playPinsSound(PIN_COUNT - pinsDown());
+		}
+		// gutter sound
+		if(ballPos.z < 10 && 
+				(ballPos.x < -3 || ballPos.x > 3)){
+			gameAudioManager.playGutterSound();
+		}
+		
+		// no sound
+		if(hasStopped){
+			gameAudioManager.stopAllSounds();
+		}
+		
 	}
 	
 	/**
