@@ -34,6 +34,8 @@ public class Menu extends BasicGameState {
 	protected InputHandler input;
 	protected Mouse mouse;
 	
+	protected List<MenuItem> items;
+	
 	/**
 	 * Creates a new menu.
 	 * @param name The name of the menu being created.
@@ -43,6 +45,7 @@ public class Menu extends BasicGameState {
 		super(name);
 		
 		this.display = DisplaySystem.getDisplaySystem();
+		this.items = items;
 		
 		initInput();
         initCursor();
@@ -61,16 +64,6 @@ public class Menu extends BasicGameState {
         	
         	rootNode.attachChild(menuItemNode);
         	menuItemNode.setLocalTranslation(positionX, positionY, 0);
-            
-            // Add event handlers
-            MenuItemListener listener = menuItem.getListener();
-            if (listener != null) {
-            	if (listener.getBindedKey() != null) {
-            		input.addAction(listener, InputHandler.DEVICE_KEYBOARD, listener.getBindedKey(), InputHandler.AXIS_NONE, false);
-            	}
-
-            	input.addAction(new MouseItemSelector(listener, menuItemNode));
-            }
 		}
         
         // Make sure everything renders properly
@@ -78,6 +71,28 @@ public class Menu extends BasicGameState {
         rootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
         rootNode.updateRenderState();
         rootNode.updateGeometricState(0, true);
+	}
+	
+	@Override
+	public void setActive(boolean active) {
+		super.setActive(active);
+		
+		if (active) {
+			// Add event handlers
+			for (MenuItem menuItem : items) {
+	            MenuItemListener listener = menuItem.getListener();
+	            if (listener != null) {
+	            	if (listener.getBindedKey() != null) {
+	            		input.addAction(listener, InputHandler.DEVICE_KEYBOARD, listener.getBindedKey(), InputHandler.AXIS_NONE, false);
+	            	}
+	
+	            	input.addAction(new MouseItemSelector(listener, (Text) rootNode.getChild(menuItem.name)));
+	            }
+			}
+		} else {
+			// Remove all listeners!
+			input.removeAllActions();
+		}
 	}
 	
 	/**

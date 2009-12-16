@@ -468,10 +468,11 @@ public class BowlingGameState extends PhysicsGameState {
 	 * Adds the finish menu game state.
 	 */
     private void setUpEndGameMenu() {
-    	this.setActive(false);
+    	this.reset();
+		this.setActive(false);
+		
     	GameState menu = EndGameMenuState.getState();
 		EndGameMenuState.setInputHandler(inputHandler);
 		menu.setActive(true);
-		this.reset();
 	}
 }
