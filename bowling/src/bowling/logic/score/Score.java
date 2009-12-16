@@ -273,11 +273,21 @@ public class Score {
 
 	public static void main(String[] args) {
 		
-		int[] droppedPins = {8, 2, 4, 3};
+		int[] droppedPins = {
+				0, 0,
+				0, 0,
+				0, 0,
+				0, 0,
+				0, 0,
+				0, 0,
+				0, 0,
+				0, 0,
+				5, 5,
+				10, 5, 5};
 		Score score = new Score("Ale");
 		for (int droppedPin : droppedPins) {
 			System.out.println ("Round " + score.getRound() + ": " + droppedPin + " pins down. Action: " + score.score(droppedPin));
-			score.getScore();
+			//score.getScore();
 		}
 		
 		score.getScore();
