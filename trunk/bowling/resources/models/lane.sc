@@ -65,7 +65,7 @@ object {
 		scalex 9
 		scaley 0.4
 		scalez 5
-		translate 0 -0.25 37.5
+		translate 0 -0.4 37.5
 	}
 	shader "BackWall.shader"
 	type box
