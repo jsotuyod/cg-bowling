@@ -271,7 +271,7 @@ public class Score {
 		return currRound;
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		
 		int[] droppedPins = {
 				0, 0,
@@ -292,7 +292,7 @@ public class Score {
 		
 		score.getScore();
 		
-	}
+	}*/
 	
 	public void getScore() {
 		for (int i = 0; i < TOTAL_ROUNDS; i++) {
