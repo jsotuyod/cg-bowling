@@ -78,8 +78,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private BowlingGameState() {
 		super("bowling game");
 		
-		this.userName1 = "Player 1";
-		this.userName2 = "Player 2";
+		this.userName1 = "Jugador 1";
+		this.userName2 = "Jugador 2";
 		
 		// Position camera
 		this.setupCamera();
@@ -588,18 +588,18 @@ public class BowlingGameState extends PhysicsGameState {
 		if(hasStopped){
 			gameAudioManager.stopAllSounds();
 		}
-		
 	}
 
 	/**
 	 * Adds the finish menu game state.
 	 */
     private void setUpEndGameMenu() {
-    	this.reset();
-		this.setActive(false);
-		
-    	GameState menu = EndGameMenuState.getState();
+		GameState menu = EndGameMenuState.getState();
 		EndGameMenuState.setInputHandler(inputHandler);
+		EndGameMenuState.setWinner(this.scoreBoard.getWinner());
 		menu.setActive(true);
+		
+		this.reset();
+		this.setActive(false);
 	}
 }

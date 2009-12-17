@@ -236,9 +236,7 @@ public class Score {
 			Point point = new Point();
 
 			this.points.add(point);
- 
 		}
-		
 	}
 	
 	public String getPlayerName() {
@@ -248,35 +246,14 @@ public class Score {
 	public int getRound() {
 		return currRound;
 	}
-
-/*	public static void main(String[] args) {
-		
-		int[] droppedPins = {
-				0, 0,
-				0, 0,
-				0, 0,
-				0, 0,
-				0, 0,
-				0, 0,
-				0, 0,
-				0, 0,
-				5, 5,
-				10, 5, 5};
-		Score score = new Score("Ale");
-		for (int droppedPin : droppedPins) {
-			System.out.println ("Round " + score.getRound() + ": " + droppedPin + " pins down. Action: " + score.score(droppedPin));
-			//score.getScore();
-		}
-		
-		score.getScore();
-		
-	}*/
 	
-	public void getScore() {
-		for (int i = 0; i < TOTAL_ROUNDS; i++) {
-
-			System.out.println (this.points.get(i));
-
+	public int getScore() {
+		int score = 0;
+		
+		for (int i = 0; i <= currRound; i++) {
+			score += this.points.get(i).getSubTotalValue();
 		}
+		
+		return score;
 	}
 }
