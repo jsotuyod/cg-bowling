@@ -29,7 +29,7 @@
 		<copy todir="${deps.dir}">
 			<fileset dir="${lib.dir}" />
 		</copy>
-		<copy file="./run.bat" todir="${dist.dir}" />
+		
 	</target>
 
 	<target name="clean">
