@@ -10,6 +10,8 @@ import bowling.menu.MenuItem;
 
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Text;
 import com.jmex.game.state.GameState;
 
 /**
@@ -20,7 +22,7 @@ public class EndGameMenuState {
 	private static GameState state;
 	
 	private static GameInputHandler inputHandler;
-	
+
 	/**
 	 * End game Menu State constructor. Private, should never be instanced.
 	 */
@@ -50,7 +52,18 @@ public class EndGameMenuState {
 	 * @return The newly created instance of the end game menu game state.
 	 */
 	private static GameState createState() {
+		return new Menu("end game menu", getMenuItemList(null));
+	}
+	
+	/**
+	 * Retrieves hte lsit of menu items according to the winner.
+	 * @param winner The name of the winner, or nulll if a tie.
+	 * @return The lsit of menu items to be used in the menu.
+	 */
+	private static List<MenuItem> getMenuItemList(String winner) {
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
+		
+		menuItems.add(new MenuItem("winner", winner != null ? "El ganador es el " + winner : "Es un empate", null));
 		
     	menuItems.add(new MenuItem("start_end", "Comenzar nuevamente", new MenuItemListener(KeyInput.KEY_RETURN) {
 			
@@ -74,8 +87,22 @@ public class EndGameMenuState {
 				System.exit(0);
 			}
 		}));
+    	
+    	return menuItems;
+	}
+
+	/**
+	 * Sets the menu item lists displaying the winner
+	 * @param winner The name of the winner, null in case of a tie.
+	 */
+	public static void setWinner(String winner) {
+		Menu menu = (Menu) state;
 		
-		return new Menu("end game menu", menuItems);
+		menu.setMenuItems(getMenuItemList(winner));
+		
+		Text text = (Text) menu.getRootNode().getChild("winner");
+		text.setTextColor(new ColorRGBA(1, 0, 0, 1));
+		menu.getRootNode().updateRenderState();
 	}
 
 }

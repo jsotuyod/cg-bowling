@@ -126,4 +126,20 @@ public class Board {
 	public void render(float tpf) {
 		DisplaySystem.getDisplaySystem().getRenderer().draw(this.scoreNode);
 	}
+
+	/**
+	 * Retrieves the winner player's name, or null if it's a tie.
+	 * @return The winner player if any, null if a tie.
+	 */
+	public String getWinner() {
+		
+		if (this.player1Score.getScore() > this.player2Score.getScore()) {
+			return this.player1Score.getPlayerName();
+		} else if (this.player1Score.getScore() < this.player2Score.getScore()) {
+			return this.player2Score.getPlayerName();
+		}
+		
+		// It's a draw
+		return null;
+	}
 }

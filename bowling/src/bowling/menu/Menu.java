@@ -45,10 +45,34 @@ public class Menu extends BasicGameState {
 		super(name);
 		
 		this.display = DisplaySystem.getDisplaySystem();
-		this.items = items;
 		
 		initInput();
         initCursor();
+		
+		this.setMenuItems(items);
+	}
+	
+	/**
+	 * Sets the menu items.
+	 * @param items The lsit of items to set in the menu.
+	 */
+	public void setMenuItems(List<MenuItem> items) {
+		
+		// Remove every text node
+		input.removeAllActions();
+		
+		if (this.isActive()) {
+			// Reset mouse handling
+			mouse.registerWithInputHandler(input);
+		}
+		
+		if (this.items != null) {
+			for (MenuItem menuItem : this.items) {
+				rootNode.getChild(menuItem.getName()).removeFromParent();
+			}
+		}
+		
+		this.items = items;
         
         int counter = 0;
         for (MenuItem menuItem : items) {
@@ -72,7 +96,7 @@ public class Menu extends BasicGameState {
         rootNode.updateRenderState();
         rootNode.updateGeometricState(0, true);
 	}
-	
+
 	@Override
 	public void setActive(boolean active) {
 		super.setActive(active);
