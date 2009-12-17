@@ -112,11 +112,11 @@ public class Score {
 				if (firstShoot == Point.STRIKE) {
 					if (pinsDown == TOTAL_PINS) {
 						point.updateValue(LabelType.SECOND_SHOOT, Point.STRIKE);
+						return PinsAction.RESET_PINS_TURN_NOT_ENDED;
 					} else {
 						point.updateValue(LabelType.SECOND_SHOOT, pinsDown);
+						return PinsAction.DO_NOTHING;
 					}
-					
-					return PinsAction.RESET_PINS_TURN_NOT_ENDED;
 				} else {
 					int roundPoints = pinsDown + firstShoot;
 					
@@ -143,7 +143,9 @@ public class Score {
 				} else {
 					int roundPoints = pinsDown + secondShoot;
 
-					if (roundPoints == TOTAL_PINS) {
+					if (secondShoot == Point.STRIKE && pinsDown == TOTAL_PINS) {
+						point.updateValue(LabelType.THIRD_SHOOT, Point.STRIKE);
+					} else if (roundPoints == TOTAL_PINS) {
 						point.updateValue(LabelType.THIRD_SHOOT, Point.SPARE);
 					} else {
 						point.updateValue(LabelType.THIRD_SHOOT, pinsDown);
@@ -179,10 +181,9 @@ public class Score {
 		Text[] t = new Text[limit];
 		
 		for (int i = 0; i < limit; i++) {
-			t[i] = Util.createText(this.points.get(i).toString(), i*60, DisplaySystem.getDisplaySystem().getHeight()-60);
-			
-
+			t[i] = Util.createText(this.points.get(i).toString(), i * 60, DisplaySystem.getDisplaySystem().getHeight() - 60);
 		}
+		
 		line2 = t;
 	}
 
