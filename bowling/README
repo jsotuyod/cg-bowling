@@ -1,5 +1,7 @@
 README
 
+Para una correcta compilacion es necesario Java 1.6 o superior.
+
 Ejecutar:
 - ant
 
