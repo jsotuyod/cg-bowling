@@ -69,6 +69,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private float timeSinceBallStopped;
 	private boolean ballStopped;
 	
+	private boolean pinsHitted;
+	
 	/**
 	 * Creates a new bowling game state.
 	 */
@@ -132,6 +134,8 @@ public class BowlingGameState extends PhysicsGameState {
 		
 		this.ballStopped = false;
 		this.timeSinceBallStopped = 0;
+		
+		this.pinsHitted = false;
 	}
 
 	/**
@@ -378,6 +382,16 @@ public class BowlingGameState extends PhysicsGameState {
 		}
 		
 		if (!this.firstFrame && currentPhase == ThrowPhase.IN_PROGRESS) {
+			// Check if we hitted anything
+			if (!this.pinsHitted) {
+				for (Pin pin : pins) {
+					if (pin.isHitted()) {
+						this.pinsHitted = true;
+						break;
+					}
+				}
+			}
+			
 			boolean stopped = true;
 			
 			// Check if the throw is over
@@ -467,6 +481,8 @@ public class BowlingGameState extends PhysicsGameState {
 		directionmeter.setVisible(false);
 		anglemeter.setVisible(false);
 		powermeter.reset();
+		
+		this.pinsHitted = false;
 	}
 
 	/*
@@ -541,13 +557,12 @@ public class BowlingGameState extends PhysicsGameState {
 		}
 		
 		// pins sound
-		if(!hasStopped 
-				&& ballPos.z > 30 && ballPos.z < 31
-				&& ballPos.x > -3 && ballPos.x < 3){
+		if(!hasStopped && this.pinsHitted){
 			gameAudioManager.playPinsSound(PIN_COUNT - pinsDown());
 		}
+		
 		// gutter sound
-		if(ballPos.z < 10 && 
+		if(!hasStopped && ballPos.z < 10 && 
 				(ballPos.x < -3 || ballPos.x > 3)){
 			gameAudioManager.playGutterSound();
 		}
@@ -558,7 +573,7 @@ public class BowlingGameState extends PhysicsGameState {
 		}
 		
 	}
-	
+
 	/**
 	 * Adds the finish menu game state.
 	 */

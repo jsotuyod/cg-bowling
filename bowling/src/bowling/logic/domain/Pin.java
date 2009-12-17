@@ -99,4 +99,13 @@ public class Pin {
 	public boolean hasStopped() {
 		return this.node.getLinearVelocity(null).length() < VELOCITY_THRESHOLD;
 	}
+	
+	/**
+	 * Checks if the pin is being hitting.
+	 * @return True if the pin is being hitted, false otherwise.
+	 */
+	public boolean isHitted() {
+		
+		return this.node.getParent() != null && this.node.getLinearVelocity(null).lengthSquared() > 0.1;
+	}
 }
