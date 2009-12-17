@@ -139,6 +139,8 @@ public class Menu extends BasicGameState {
 		protected MenuItemListener listener;
 		protected Text textNode;
 		
+		private boolean clicked;
+		
 		/**
 		 * Creates a new mouse selector for menu items.
 		 * @param listener The listener for the menu item.
@@ -148,6 +150,8 @@ public class Menu extends BasicGameState {
 			super();
 			this.listener = listener;
 			this.textNode = textNode;
+			
+			this.clicked = MouseInput.get().isButtonDown(0);
 		}
 
 		/*
@@ -160,6 +164,13 @@ public class Menu extends BasicGameState {
 			MouseInput input = MouseInput.get();
 			
 			if (input.isButtonDown(0)) {	// It's a click!
+				
+				if (this.clicked) {	// Prevent repeats
+					return;
+				}
+				
+				this.clicked = true;
+				
 				// Check if the cursor seems to be somewhere over the text...
 				
 				// Get distance from cursor node to text node
@@ -170,6 +181,8 @@ public class Menu extends BasicGameState {
 					// Trigger event!
 	            	listener.performAction(evt);
 				}
+			} else {
+				this.clicked = false;
 			}
 		}
 	}
