@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<project name="macadam" default="dist">
+
+	<property name="src.dir" value="src" />
+	<property name="resources.dir" value="resources" />
+	<property name="dist.dir" value="build" />
+	<property name="build.dir" value="${dist.dir}/bin" />
+	<property name="resources.dest.dir" value="${dist.dir}/resources" />
+	<property name="deps.dir" value="${dist.dir}/lib" />
+	<property name="lib.dir" value="lib" />
+	<property name="ant.dir" value="./" />
+
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="dist" description="Generate distribution">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${resources.dir}" />
+		<javac destdir="${build.dir}">
+			<src path="${src.dir}" />
+			<classpath refid="master-classpath" />
+		</javac>
+		<copy todir="${resources.dest.dir}">
+			<fileset dir="${resources.dir}" />
+		</copy>
+		<copy todir="${deps.dir}">
+			<fileset dir="${lib.dir}" />
+		</copy>
+		<copy file="./run.bat" todir="${dist.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+	</target>
+
+</project>
