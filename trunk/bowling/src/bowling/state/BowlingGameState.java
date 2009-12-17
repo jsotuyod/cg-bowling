@@ -467,7 +467,9 @@ public class BowlingGameState extends PhysicsGameState {
 		case GAME_ENDED:
 			this.scoreBoard.refreshText();
 			try {
-				Thread.sleep(2000);
+				this.render(0);
+				DisplaySystem.getDisplaySystem().getRenderer().displayBackBuffer();
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 			}
 			setUpEndGameMenu();
