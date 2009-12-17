@@ -49,29 +49,19 @@ public class OptionsMenuState {
 		
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
 		
-    	menuItems.add(new MenuItem("music", "[M] Musica On/Off" , new MenuItemListener(KeyInput.KEY_M) {
+    	menuItems.add(new MenuItem("music", "Musica On/Off" , new MenuItemListener(KeyInput.KEY_M) {
 			
 			@Override
 			public void performAction(InputActionEvent evt){
-				// TODO: ver como hacerlo andar con mouse
-				if(!evt.getTriggerDevice().equals("mouse")){
-					if(evt.getTriggerPressed()){
-						gameAudioManager.toggleBackgroundMusic();
-					}
-				}
+				gameAudioManager.toggleBackgroundMusic();
 			}
 		}));
     	
-    	menuItems.add(new MenuItem("sound", "[S] Sonido de efectos On/Off", new MenuItemListener(KeyInput.KEY_S) {
+    	menuItems.add(new MenuItem("sound", "Sonido de efectos On/Off", new MenuItemListener(KeyInput.KEY_S) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
-				// TODO: ver como hacerlo andar con mouse
-				if(!evt.getTriggerDevice().equals("mouse")){
-					if(evt.getTriggerPressed()){
-						gameAudioManager.toggleBackgroundMusic();
-					}
-				}
+				gameAudioManager.toggleBowlingSound();
 			}
 		}));
     	
