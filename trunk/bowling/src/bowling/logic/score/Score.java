@@ -40,9 +40,6 @@ public class Score {
 		if (totalNode != null) {
 			this.scoreNode.detachChild(this.totalNode);
 		}
-		
-
-		
 	}
 	
 	public PinsAction score(int pinsDown) {
@@ -234,26 +231,6 @@ public class Score {
 		this.currRound = 0;
 		this.currShoot = 0;
 		
-
-/*		Font3D font = new Font3D(new Font("Arial", Font.PLAIN, 24), 0.001f, true, true, true);
-		Text3D text = font.createText("Testing 1, 2, 3", 50.0f, 0);
-		text.setLocalScale(new Vector3f(5.0f, 5.0f, 0.01f));
-		debug.getRootNode().attachChild(text);*/
-		
-		/*Text t = Text.createDefaultTextLabel("Text",
-        	"----E: debug show/hide reflection and refraction textures");
-		t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		t.setLightCombineMode(Spatial.LightCombineMode.Off);
-		t.setLocalTranslation(new Vector3f(100, 100, 5));
-		debug.getRootNode().attachChild(t);
-		
-		t = Text.createDefaultTextLabel("Text",
-    	"Otra prueba");
-	t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-	t.setLightCombineMode(Spatial.LightCombineMode.Off);
-	t.setLocalTranslation(new Vector3f(100, 50, 5));
-	debug.getRootNode().attachChild(t);
-	debug.getRootNode().detachChild(t);*/
 		for (int i = 0; i < TOTAL_ROUNDS; i++) {
 
 			Point point = new Point();

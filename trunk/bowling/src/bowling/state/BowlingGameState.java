@@ -64,7 +64,8 @@ public class BowlingGameState extends PhysicsGameState {
 	
 	private boolean firstFrame;
 	
-	private String userName;
+	private String userName1;
+	private String userName2;
 	
 	private float timeSinceBallStopped;
 	private boolean ballStopped;
@@ -77,7 +78,8 @@ public class BowlingGameState extends PhysicsGameState {
 	private BowlingGameState() {
 		super("bowling game");
 		
-		this.userName = "Player 1";
+		this.userName1 = "Player 1";
+		this.userName2 = "Player 2";
 		
 		// Position camera
 		this.setupCamera();
@@ -96,7 +98,7 @@ public class BowlingGameState extends PhysicsGameState {
 		this.setDirectionMeter();
 		this.setAngleMeter();
 		
-		this.reset(this.userName);
+		this.reset();
 		
 		// Make sure everything renders properly
 		rootNode.updateGeometricState(0, true);
@@ -107,26 +109,36 @@ public class BowlingGameState extends PhysicsGameState {
 	 * Creates the score board.
 	 */
 	private void createScoreBoard() {
-		this.scoreBoard = new Board(this.userName);
+		this.scoreBoard = new Board(this.userName1, this.userName2);
 	}
 	
 	/**
-	 * Set's the user name. Reset's the game.
+	 * Set's the first user name. Reset's the game.
 	 * @param value The new user name.
 	 */
-	public void setUserName(String value) {
-		this.userName = value;
+	public void setUserName1(String value) {
+		this.userName1 = value;
 		
-		this.reset(this.userName);
+		this.reset();
+	}
+	
+	/**
+	 * Set's the second user name. Reset's the game.
+	 * @param value The new user name.
+	 */
+	public void setUserName2(String value) {
+		this.userName2 = value;
+		
+		this.reset();
 	}
 
 	/**
 	 * Resets the game state.
 	 */
-	public void reset(String userName) {
+	public void reset() {
 		this.resetScene();
 		
-		this.scoreBoard.reset(userName);
+		this.scoreBoard.reset(this.userName1, this.userName2);
 		
 		this.currentPhase = ThrowPhase.SET_POWER;
 		
@@ -467,6 +479,7 @@ public class BowlingGameState extends PhysicsGameState {
 		case GAME_ENDED:
 			this.scoreBoard.refreshText();
 			try {
+				this.scoreBoard.update(0);
 				this.render(0);
 				DisplaySystem.getDisplaySystem().getRenderer().displayBackBuffer();
 				Thread.sleep(5000);
@@ -580,7 +593,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 * Adds the finish menu game state.
 	 */
     private void setUpEndGameMenu() {
-    	this.reset(this.userName);
+    	this.reset();
 		this.setActive(false);
 		
     	GameState menu = EndGameMenuState.getState();

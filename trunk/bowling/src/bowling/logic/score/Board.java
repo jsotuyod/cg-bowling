@@ -1,5 +1,6 @@
 package bowling.logic.score;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
@@ -9,13 +10,28 @@ import com.jme.system.DisplaySystem;
 public class Board {
 
 	private Node scoreNode;
+	
+	private Node scorePlayer1Node;
+	private Node scorePlayer2Node;
+	
 	private Score player1Score;
+	private Score player2Score;
+	
+	private boolean firstPlayerTurn;
 
-	public Board(String userName) {
+	public Board(String userName1, String userName2) {
 		
 		this.scoreNode = new Node("score node");
 		
-		this.reset(userName);
+		this.scorePlayer1Node = new Node("score player1 node");
+		this.scorePlayer2Node = new Node("score player2 node");
+		
+		this.scoreNode.attachChild(this.scorePlayer1Node);
+		this.scoreNode.attachChild(this.scorePlayer2Node);
+		
+		this.scorePlayer2Node.getLocalTranslation().y = -100;
+		
+		this.reset(userName1, userName2);
 		
 		this.scoreNode.setLightCombineMode(Spatial.LightCombineMode.Off);
 		this.scoreNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
@@ -25,32 +41,43 @@ public class Board {
 	
 	public void refreshText() {
 		
-		this.scoreNode.detachAllChildren();
+		this.refreshScore(player1Score, scorePlayer1Node, firstPlayerTurn);
+		this.refreshScore(player2Score, scorePlayer2Node, !firstPlayerTurn);
+	}
+	
+	private void refreshScore(Score score, Node node, boolean isActive) {
+		node.detachAllChildren();
 		
-		player1Score.calcNameLine();
-		Text nameLine = player1Score.getNameLine();
+		score.calcNameLine();
+		Text nameLine = score.getNameLine();
 		
-		this.scoreNode.attachChild(nameLine);
+		if (isActive) {
+			nameLine.setTextColor(new ColorRGBA(1, 0, 0, 1));
+		} else {
+			nameLine.setTextColor(new ColorRGBA(1, 1, 1, 1));
+		}
 		
-		player1Score.calcFirstLine();
-		Text[] firstLine = player1Score.getFirstLine();
+		node.attachChild(nameLine);
+		
+		score.calcFirstLine();
+		Text[] firstLine = score.getFirstLine();
 		for (Text line : firstLine) {
-			this.scoreNode.attachChild(line);	
+			node.attachChild(line);	
 		}
 		
-		player1Score.calcSecondLine();
-		Text[] secondLine = player1Score.getSecondLine();
+		score.calcSecondLine();
+		Text[] secondLine = score.getSecondLine();
 		for (Text line : secondLine) {
-			this.scoreNode.attachChild(line);	
+			node.attachChild(line);	
 		}
 		
-		player1Score.calcThirdLine();
-		Text[] thirdLine = player1Score.getThirdLine();
+		score.calcThirdLine();
+		Text[] thirdLine = score.getThirdLine();
 		for (Text line : thirdLine) {
-			this.scoreNode.attachChild(line);
+			node.attachChild(line);
 		}
 		
-		this.scoreNode.updateRenderState();
+		node.updateRenderState();
 	}
 	
 	public void update(float tpf) {
@@ -58,8 +85,28 @@ public class Board {
 	}
 	
 	public PinsAction score(int pinsDown) {
-		PinsAction p = player1Score.score(pinsDown);
+		
+		Score score;
+		
+		if (firstPlayerTurn) {
+			score = player1Score;
+		} else {
+			score = player2Score;
+		}
+		
+		PinsAction p = score.score(pinsDown);
+		
+		if (p == PinsAction.GAME_ENDED && firstPlayerTurn) {
+			// Fake it! Turn is over, not game yet
+			p = PinsAction.TURN_ENDED;
+		}
+		
+		if (p == PinsAction.TURN_ENDED) {
+			firstPlayerTurn = !firstPlayerTurn;
+		}
+		
 		refreshText();
+		
 		return p;
 	}
 
@@ -67,8 +114,11 @@ public class Board {
 	 * Resets the score board.
 	 * @param userName The name of the user whose score is being kept track of.
 	 */
-	public void reset(String userName) {
-		this.player1Score = new Score(userName);
+	public void reset(String userName1, String userName2) {
+		this.player1Score = new Score(userName1);
+		this.player2Score = new Score(userName2);
+		
+		firstPlayerTurn = true;
 		
 		refreshText();
 	}
