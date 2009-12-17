@@ -45,7 +45,7 @@ public class MainMenuState {
 	private static GameState createState() {
 		List<MenuItem> menuItems = new LinkedList<MenuItem>();
 		
-    	menuItems.add(new MenuItem("start", "Comenzar Juego", new MenuItemListener(KeyInput.KEY_RETURN) {
+    	menuItems.add(new MenuItem("start", "Comenzar Juego (1 jugador)", new MenuItemListener(KeyInput.KEY_RETURN) {
 			
 			@Override
 			public void performAction(InputActionEvent evt) {
