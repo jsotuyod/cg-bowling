@@ -1,0 +1,9 @@
+README
+
+Ejecutar:
+- ant
+
+y luego
+
+- cd build
+- run.bat
