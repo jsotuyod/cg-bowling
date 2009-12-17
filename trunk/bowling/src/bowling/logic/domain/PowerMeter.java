@@ -15,7 +15,7 @@ public class PowerMeter extends GameDisplay {
 	final private static float HALF_CYCLE_TIME = CYCLE_TIME / 2;
 	
 	final private static float MAX_POWER = 20000;
-	final private static float MIN_POWER = 10000;
+	final private static float MIN_POWER = 7000;
 	
 	protected Node barNode;
 	

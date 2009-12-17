@@ -235,6 +235,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 */
 	private void createFloor() {
 		StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
+		staticNode.setMaterial(Material.WOOD);
 		rootNode.attachChild(staticNode);
 		
 		AssetManager.getInstance().loadFloor(staticNode, true);
@@ -245,6 +246,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 */
 	private void createWall() {
 		StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
+		staticNode.setMaterial(Material.GRANITE);
 		rootNode.attachChild(staticNode);
 		
 		AssetManager.getInstance().loadWall(staticNode, true);
@@ -255,6 +257,7 @@ public class BowlingGameState extends PhysicsGameState {
 	 */
 	private void createLane() {
     	StaticPhysicsNode staticNode = getPhysicsSpace().createStaticNode();
+    	staticNode.setMaterial(Material.WOOD);	// this shouldn't be all wood, but decomposing the model seems impossible...
         rootNode.attachChild(staticNode);
 
         AssetManager.getInstance().loadLane(staticNode, true);
@@ -286,7 +289,6 @@ public class BowlingGameState extends PhysicsGameState {
         	pin.setLocalScale(0.25f);
         	pin.setMaterial(Material.WOOD);
         	pin.computeMass();
-        	pin.setMass(5.0f);
         	
         	Vector3f originalPos = new Vector3f(x[i] * PIN_DISTANCE, 1.32f, z[i] * PIN_DISTANCE + PIN_OFFSET);
         	this.pins.add(new Pin(pin, originalPos));

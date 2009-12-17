@@ -56,10 +56,10 @@ public class Ball {
 	}
 	
 	/**
-	 * Checks if the ball has stopped.
+	 * Checks if the ball has stopped (or is moving backwards).
 	 * @return True if the ball has stoped moving, false otherwise.
 	 */
 	public boolean hasStopped() {
-		return this.node.getLinearVelocity(null).length() < VELOCITY_THRESHOLD;
+		return this.node.getLinearVelocity(null).z < VELOCITY_THRESHOLD;
 	}
 }
